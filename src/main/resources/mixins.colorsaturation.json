@@ -1,13 +1,15 @@
 {
   "compatibilityLevel": "JAVA_8",
   "minVersion": "0.7",
-  "package": "org.polyfrost.example.mixin",
+  "package": "org.polyfrost.colorsaturation.mixin",
   "refmap": "mixins.${id}.refmap.json",
   "injectors": {
     "maxShiftBy": 5
   },
   "client": [
-    "MinecraftMixin"
+    "EntityRendererMixin",
+    "OptifineConfigMixin",
+    "ShaderGroupAccessor"
   ],
   "verbose": true
 }
