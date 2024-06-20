@@ -1,21 +1,12 @@
-# OneConfigExampleMod
+<img align="right" src="src/main/resources/colorsaturation.svg" alt="ColorSaturation Icon"/>
 
-![Powered by OneConfig](https://polyfrost.org/media/branding/badges/badge_1.svg)
-![Compact Powered by OneConfig](https://polyfrost.org/media/branding/badges/badge_2.svg)
-![Minimal Powered by OneConfig](https://polyfrost.org/media/branding/badges/badge_3.svg)
-![Minimal Compact Powered by OneConfig](https://polyfrost.org/media/branding/badges/badge_4.svg)
+# ColorSaturation
 
-Example mod implementing OneConfig.
+![Compact Powered by OneConfig](https://polyfrost.org/img/compact_vector.svg)  ![Dev Workflow Status](https://img.shields.io/github/v/release/Polyfrost/ColorSaturation.svg?style=for-the-badge&color=1452cc&label=release)
 
-## How to use
+A simple color saturation mod.
 
-- Copy the template either by using GitHub's "Use this template" feature or downloading the repo manually.
-- **Remove the license named "LICENSE-TEMPLATE" and choose a new one.**
-- Refactor the template (specifically, the modid, version and name in the gradle.properties and most of the class names)
-  to a different name.
-- Have fun modding! :D
+## Features
 
-## Need to update to a newer commit of this template?
-
-Check out these update guides:
-- [Updating to commit `301a6ca`](update-to-301a6ca.md) (most recent update)
+- Toggle on / off
+- Change saturation intensity
