@@ -7,6 +7,8 @@
     "maxShiftBy": 5
   },
   "client": [
+    "BlurHandlerImplMixin",
+    "BlurModMixin",
     "EntityRendererMixin",
     "OptifineConfigMixin",
     "ShaderGroupAccessor"
