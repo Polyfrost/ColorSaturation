@@ -35,7 +35,7 @@ public class SaturationConfig extends Config {
     public static float saturation = 1;
 
     public SaturationConfig() {
-        super(new Mod(ColorSaturation.NAME, ModType.UTIL_QOL), ColorSaturation.MODID + ".json");
+        super(new Mod(ColorSaturation.NAME, ModType.UTIL_QOL, "/colorsaturation.svg"), ColorSaturation.MODID + ".json");
         initialize();
 
         addListener("saturation", () -> {
