@@ -29,7 +29,7 @@ public class SaturationConfig extends Config {
     public static boolean forceDisableFastRender = true;
 
     @Slider(
-            name = "Example Slider",
+            name = "Saturation Slider",
             min = -1f, max = 5 // Minimum and maximum values for the slider.
     )
     public static float saturation = 1;

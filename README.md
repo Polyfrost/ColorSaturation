@@ -10,3 +10,7 @@ A simple color saturation mod.
 
 - Toggle on / off
 - Change saturation intensity
+
+## Gallery
+
+![settings-page.png](images/settings-page.png)
