@@ -13,5 +13,9 @@ A simple color saturation mod.
 
 ## Gallery
 
-![saturation5.png](images/saturation5.png)
-![saturation0.png](images/saturation0.png)
+![settings-page.png](images/settings-page.png)
+![1.png](images/1.png)
+![-1.png](images/-1.png)
+![0.png](images/0.png)
+![1.4.png](images/1.4.png)
+![2.png](images/2.png)
