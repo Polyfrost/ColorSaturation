@@ -1,16 +1,15 @@
 package org.polyfrost.colorsaturation;
 
-import cc.polyfrost.oneconfig.events.event.RenderEvent;
-import cc.polyfrost.oneconfig.events.event.Stage;
-import cc.polyfrost.oneconfig.libs.eventbus.Subscribe;
-import cc.polyfrost.oneconfig.libs.universal.UMinecraft;
-import cc.polyfrost.oneconfig.libs.universal.UResolution;
 import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.shader.ShaderUniform;
 import net.minecraft.util.ResourceLocation;
 import org.polyfrost.colorsaturation.config.SaturationConfig;
 import org.polyfrost.colorsaturation.mixin.ShaderGroupAccessor;
+import org.polyfrost.oneconfig.api.event.v1.events.RenderEvent;
+import org.polyfrost.oneconfig.api.event.v1.invoke.impl.Subscribe;
+import org.polyfrost.universal.UMinecraft;
+import org.polyfrost.universal.UResolution;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,11 +20,7 @@ public class Saturation {
     private static final ResourceLocation phosphorBlur = new ResourceLocation("minecraft:shaders/post/color_convolve.json");
 
     @Subscribe
-    private void onRenderTick(RenderEvent event) {
-        if (event.stage != Stage.END) {
-            return;
-        }
-
+    private void onRenderTick(RenderEvent.End event) {
         // Only update the shader if one is active
         if (!isShaderActive() || lastEnabled != ColorSaturation.config.enabled) {
             lastEnabled = ColorSaturation.config.enabled;

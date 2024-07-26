@@ -1,8 +1,8 @@
 package org.polyfrost.colorsaturation.mixin;
 
-import cc.polyfrost.oneconfig.libs.universal.UMinecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import org.polyfrost.colorsaturation.EntityRendererHook;
+import org.polyfrost.universal.UMinecraft;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
