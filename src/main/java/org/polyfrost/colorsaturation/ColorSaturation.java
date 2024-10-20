@@ -17,9 +17,9 @@ import org.polyfrost.oneconfig.api.event.v1.EventManager;
 public class ColorSaturation {
 
     // Sets the variables from `gradle.properties`. See the `blossom` config in `build.gradle.kts`.
-    public static final String MODID = "@ID@";
-    public static final String NAME = "@NAME@";
-    public static final String VERSION = "@VER@";
+    public static final String MODID = "@MOD_ID@";
+    public static final String NAME = "@MOD_NAME@";
+    public static final String VERSION = "@MOD_VERSION@";
     public static SaturationConfig config;
 
     // Register the config and commands.
