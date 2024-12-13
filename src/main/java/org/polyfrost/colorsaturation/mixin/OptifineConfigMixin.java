@@ -15,7 +15,7 @@ public class OptifineConfigMixin {
     @Dynamic("OptiFine")
     @Inject(method = "isFastRender", at = @At("HEAD"), cancellable = true)
     private static void cancelFastRender(CallbackInfoReturnable<Boolean> cir) {
-        if (ColorSaturation.config != null && ColorSaturation.config.enabled && SaturationConfig.forceDisableFastRender) {
+        if (ColorSaturation.getConfig() != null && ColorSaturation.getConfig().enabled && SaturationConfig.forceDisableFastRender) {
             cir.setReturnValue(false);
         }
     }

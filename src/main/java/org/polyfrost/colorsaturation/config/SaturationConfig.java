@@ -34,7 +34,7 @@ public class SaturationConfig extends Config {
     public static float saturation = 1;
 
     public SaturationConfig() {
-        super(ColorSaturation.MODID + ".json", "/colorsaturation.svg", ColorSaturation.NAME, Category.QOL);
+        super(ColorSaturation.ID + ".json", "/colorsaturation.svg", ColorSaturation.NAME, Category.QOL);
 
         addCallback("saturation", () -> {
             if (enabled) {

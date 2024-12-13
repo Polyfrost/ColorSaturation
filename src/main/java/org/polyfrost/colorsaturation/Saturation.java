@@ -22,8 +22,8 @@ public class Saturation {
     @Subscribe
     private void onRenderTick(RenderEvent.End event) {
         // Only update the shader if one is active
-        if (!isShaderActive() || lastEnabled != ColorSaturation.config.enabled) {
-            lastEnabled = ColorSaturation.config.enabled;
+        if (!isShaderActive() || lastEnabled != ColorSaturation.getConfig().enabled) {
+            lastEnabled = ColorSaturation.getConfig().enabled;
             reloadShader();
         }
     }
@@ -33,7 +33,7 @@ public class Saturation {
             return;
         }
 
-        if (!isShaderActive() && ColorSaturation.config.enabled) {
+        if (!isShaderActive() && ColorSaturation.getConfig().enabled) {
             try {
                 final ShaderGroup saturationShader = new ShaderGroup(UMinecraft.getMinecraft().getTextureManager(), UMinecraft.getMinecraft().getResourceManager(), UMinecraft.getMinecraft().getFramebuffer(), phosphorBlur);
                 saturationShader.createBindFramebuffers(UResolution.getWindowWidth(), UResolution.getWindowHeight());
@@ -42,7 +42,7 @@ public class Saturation {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (isShaderActive() && !ColorSaturation.config.enabled) {
+        } else if (isShaderActive() && !ColorSaturation.getConfig().enabled) {
             final EntityRendererHook entityRenderer = (EntityRendererHook) UMinecraft.getMinecraft().entityRenderer;
             if (entityRenderer.colorSaturation$getSaturationShader() != null) {
                 entityRenderer.colorSaturation$getSaturationShader().deleteShaderGroup();
