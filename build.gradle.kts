@@ -18,7 +18,7 @@ plugins {
 
 toolkitLoomHelper {
     useOneConfig {
-        version = "1.0.0-alpha.49"
+        version = "1.0.0-alpha.54"
         loaderVersion = "1.1.0-alpha.35"
 
         usePolyMixin = true
@@ -56,4 +56,8 @@ dependencies {
             modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.dependencies.fabric.fabricApiVersion}")
         }
     }
+}
+
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

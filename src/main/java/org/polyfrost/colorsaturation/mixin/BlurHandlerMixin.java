@@ -1,24 +1,22 @@
 package org.polyfrost.colorsaturation.mixin;
 
-import cc.polyfrost.oneconfig.internal.gui.impl.BlurHandlerImpl;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.polyfrost.colorsaturation.EntityRendererHook;
+import org.polyfrost.oneconfig.api.ui.v1.internal.BlurHandler;
 import org.polyfrost.universal.UMinecraft;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Pseudo
-@Mixin(targets = "cc.polyfrost.oneconfig.internal.gui.impl.BlurHandlerImpl", remap = false)
-public abstract class BlurHandlerImplMixin {
-
-    @Shadow abstract boolean isShaderActive();
+@Mixin(targets = "org.polyfrost.oneconfig.api.ui.v1.internal.BlurHandler", remap = false)
+public class BlurHandlerMixin {
 
     @Dynamic("OneConfig")
-    @Redirect(method = "reloadBlur", at = @At(value = "INVOKE", target = "Lcc/polyfrost/oneconfig/internal/gui/impl/BlurHandlerImpl;isShaderActive()Z", ordinal = 0))
-    private boolean redirectShaderActive(BlurHandlerImpl a) { // works without any params in 0.7.11 but in 0.8 things got stricter
+    @WrapOperation(method = "reloadBlur", at = @At(value = "INVOKE", target = "Lcc/polyfrost/oneconfig/internal/gui/impl/BlurHandlerImpl;isShaderActive()Z", ordinal = 0))
+    private boolean redirectShaderActive(BlurHandler instance, Object gui, Operation<Boolean> original) { // works without any params in 0.7.11 but in 0.8 things got stricter
         if (
                         //#if MC<=11202
                         net.minecraft.client.renderer.OpenGlHelper.shadersSupported
@@ -29,6 +27,7 @@ public abstract class BlurHandlerImplMixin {
         ) {
             return false;
         }
-        return isShaderActive();
+
+        return original.call(instance, gui);
     }
 }
