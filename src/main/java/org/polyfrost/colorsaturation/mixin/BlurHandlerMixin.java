@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class BlurHandlerMixin {
 
     @Dynamic("OneConfig")
-    @WrapOperation(method = "reloadBlur", at = @At(value = "INVOKE", target = "Lcc/polyfrost/oneconfig/internal/gui/impl/BlurHandlerImpl;isShaderActive()Z", ordinal = 0))
+    @WrapOperation(method = "reloadBlur", at = @At(value = "INVOKE", target = "Lorg/polyfrost/oneconfig/api/ui/v1/internal/BlurHandler;isShaderActive()Z", ordinal = 0))
     private boolean redirectShaderActive(BlurHandler instance, Object gui, Operation<Boolean> original) { // works without any params in 0.7.11 but in 0.8 things got stricter
         if (
                         //#if MC<=11202
