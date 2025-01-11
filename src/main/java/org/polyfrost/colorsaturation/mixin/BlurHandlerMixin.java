@@ -16,7 +16,7 @@ public class BlurHandlerMixin {
 
     @Dynamic("OneConfig")
     @WrapOperation(method = "reloadBlur", at = @At(value = "INVOKE", target = "Lorg/polyfrost/oneconfig/api/ui/v1/internal/BlurHandler;isShaderActive()Z", ordinal = 0))
-    private boolean redirectShaderActive(BlurHandler instance, Object gui, Operation<Boolean> original) { // works without any params in 0.7.11 but in 0.8 things got stricter
+    private boolean redirectShaderActive(BlurHandler instance, Operation<Boolean> original, Object gui) { // works without any params in 0.7.11 but in 0.8 things got stricter
         if (
                         //#if MC<=11202
                         net.minecraft.client.renderer.OpenGlHelper.shadersSupported
