@@ -1,5 +1,8 @@
 package org.polyfrost.colorsaturation;
 
+import dev.deftu.omnicore.client.OmniClient;
+import dev.deftu.omnicore.client.render.OmniResolution;
+import dev.deftu.omnicore.client.render.OmniTextureManager;
 import net.minecraft.client.shader.Shader;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.shader.ShaderUniform;
@@ -8,8 +11,6 @@ import org.polyfrost.colorsaturation.config.SaturationConfig;
 import org.polyfrost.colorsaturation.mixin.ShaderGroupAccessor;
 import org.polyfrost.oneconfig.api.event.v1.events.RenderEvent;
 import org.polyfrost.oneconfig.api.event.v1.invoke.impl.Subscribe;
-import org.polyfrost.universal.UMinecraft;
-import org.polyfrost.universal.UResolution;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +21,7 @@ public class Saturation {
     private static final ResourceLocation phosphorBlur = new ResourceLocation("minecraft:shaders/post/color_convolve.json");
 
     @Subscribe
-    private void onRenderTick(RenderEvent.End event) {
+    private void onRenderTick(RenderEvent.Post event) {
         // Only update the shader if one is active
         if (!isShaderActive() || lastEnabled != ColorSaturation.getConfig().enabled) {
             lastEnabled = ColorSaturation.getConfig().enabled;
@@ -29,21 +30,21 @@ public class Saturation {
     }
 
     public static void reloadShader() {
-        if (UMinecraft.getWorld() == null) {
+        if (!OmniClient.getHasWorld()) {
             return;
         }
 
         if (!isShaderActive() && ColorSaturation.getConfig().enabled) {
             try {
-                final ShaderGroup saturationShader = new ShaderGroup(UMinecraft.getMinecraft().getTextureManager(), UMinecraft.getMinecraft().getResourceManager(), UMinecraft.getMinecraft().getFramebuffer(), phosphorBlur);
-                saturationShader.createBindFramebuffers(UResolution.getWindowWidth(), UResolution.getWindowHeight());
-                ((EntityRendererHook) UMinecraft.getMinecraft().entityRenderer).colorSaturation$setSaturationShader(saturationShader);
+                final ShaderGroup saturationShader = new ShaderGroup(OmniTextureManager.get(), OmniClient.getInstance().getResourceManager(), OmniClient.getInstance().getFramebuffer(), phosphorBlur);
+                saturationShader.createBindFramebuffers(OmniResolution.getViewportWidth(), OmniResolution.getViewportHeight());
+                ((EntityRendererHook) OmniClient.getInstance().entityRenderer).colorSaturation$setSaturationShader(saturationShader);
                 reloadSaturation();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (isShaderActive() && !ColorSaturation.getConfig().enabled) {
-            final EntityRendererHook entityRenderer = (EntityRendererHook) UMinecraft.getMinecraft().entityRenderer;
+            final EntityRendererHook entityRenderer = (EntityRendererHook) OmniClient.getInstance().entityRenderer;
             if (entityRenderer.colorSaturation$getSaturationShader() != null) {
                 entityRenderer.colorSaturation$getSaturationShader().deleteShaderGroup();
             }
@@ -54,7 +55,7 @@ public class Saturation {
 
     public static void reloadSaturation() {
         try {
-            final List<Shader> listShaders = ((ShaderGroupAccessor) ((EntityRendererHook) UMinecraft.getMinecraft().entityRenderer).colorSaturation$getSaturationShader()).getListShaders();
+            final List<Shader> listShaders = ((ShaderGroupAccessor) ((EntityRendererHook) OmniClient.getInstance().entityRenderer).colorSaturation$getSaturationShader()).getListShaders();
 
             if (listShaders == null) {
                 return;
@@ -75,7 +76,7 @@ public class Saturation {
     }
 
     private static boolean isShaderActive() {
-        return ((EntityRendererHook) UMinecraft.getMinecraft().entityRenderer).colorSaturation$getSaturationShader() != null
+        return ((EntityRendererHook) OmniClient.getInstance().entityRenderer).colorSaturation$getSaturationShader() != null
                 //#if MC<=11202
                 && net.minecraft.client.renderer.OpenGlHelper.shadersSupported
                 //#endif

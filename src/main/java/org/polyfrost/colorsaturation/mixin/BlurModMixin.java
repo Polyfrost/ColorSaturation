@@ -1,8 +1,8 @@
 package org.polyfrost.colorsaturation.mixin;
 
+import dev.deftu.omnicore.client.OmniClient;
 import net.minecraft.client.renderer.EntityRenderer;
 import org.polyfrost.colorsaturation.EntityRendererHook;
-import org.polyfrost.universal.UMinecraft;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -21,7 +21,7 @@ public class BlurModMixin {
                         //#else
                         //$$ true
                         //#endif
-                        && ((EntityRendererHook) UMinecraft.getMinecraft().entityRenderer).colorSaturation$getSaturationShader() != null
+                        && ((EntityRendererHook) OmniClient.getInstance().entityRenderer).colorSaturation$getSaturationShader() != null
         ) {
             return false;
         }

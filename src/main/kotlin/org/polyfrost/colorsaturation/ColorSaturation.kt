@@ -31,7 +31,7 @@ object ColorSaturation
 
     fun initialize() {
         config = SaturationConfig()
-        CommandManager.registerCommand(SaturationCommand())
+        CommandManager.register(SaturationCommand())
         EventManager.INSTANCE.register(Saturation())
     }
 
