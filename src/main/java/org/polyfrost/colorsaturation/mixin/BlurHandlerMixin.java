@@ -2,9 +2,9 @@ package org.polyfrost.colorsaturation.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.deftu.omnicore.client.OmniClient;
 import org.polyfrost.colorsaturation.EntityRendererHook;
 import org.polyfrost.oneconfig.api.ui.v1.internal.BlurHandler;
-import org.polyfrost.universal.UMinecraft;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -23,7 +23,7 @@ public class BlurHandlerMixin {
                         //#else
                         //$$ true
                         //#endif
-                        && ((EntityRendererHook) UMinecraft.getMinecraft().entityRenderer).colorSaturation$getSaturationShader() != null
+                        && ((EntityRendererHook) OmniClient.getInstance().entityRenderer).colorSaturation$getSaturationShader() != null
         ) {
             return false;
         }
