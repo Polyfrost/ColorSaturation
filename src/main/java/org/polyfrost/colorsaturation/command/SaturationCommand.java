@@ -6,7 +6,7 @@ import org.polyfrost.oneconfig.utils.v1.dsl.ScreensKt;
 
 @Command(ColorSaturation.ID)
 public class SaturationCommand {
-    @Command
+
     private void main() {
         // TODO Implement openGui
         // ColorSaturation.getConfig().openGui();
