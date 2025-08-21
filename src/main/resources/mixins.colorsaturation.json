@@ -1,17 +1,17 @@
 {
-  "compatibilityLevel": "JAVA_8",
-  "minVersion": "0.7",
-  "package": "org.polyfrost.colorsaturation.mixin",
-  "refmap": "mixins.${mod_id}.refmap.json",
-  "injectors": {
-    "maxShiftBy": 5
-  },
-  "client": [
-    "BlurHandlerMixin",
-    "BlurModMixin",
-    "EntityRendererMixin",
-    "OptifineConfigMixin",
-    "ShaderGroupAccessor"
-  ],
-  "verbose": true
+    "compatibilityLevel": "JAVA_8",
+    "minVersion": "0.7",
+    "package": "org.polyfrost.colorsaturation.mixin",
+    "refmap": "mixins.${mod_id}.refmap.json",
+    "injectors": {
+        "maxShiftBy": 5
+    },
+    "client": [
+        "client.compat.BlurHandlerMixin",
+        "client.compat.BlurModMixin",
+        "client.compat.OptifineConfigMixin",
+
+        "client.Mixin_EntityRenderer_SaturationHandler"
+    ],
+    "verbose": true
 }

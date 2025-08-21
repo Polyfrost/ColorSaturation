@@ -1,7 +1,6 @@
-package org.polyfrost.colorsaturation.mixin;
+package org.polyfrost.colorsaturation.mixin.client.compat;
 
-import org.polyfrost.colorsaturation.ColorSaturation;
-import org.polyfrost.colorsaturation.config.SaturationConfig;
+import org.polyfrost.colorsaturation.client.ColorSaturationConfig;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -15,7 +14,7 @@ public class OptifineConfigMixin {
     @Dynamic("OptiFine")
     @Inject(method = "isFastRender", at = @At("HEAD"), cancellable = true)
     private static void cancelFastRender(CallbackInfoReturnable<Boolean> cir) {
-        if (ColorSaturation.getConfig() != null && ColorSaturation.getConfig().enabled && SaturationConfig.forceDisableFastRender) {
+        if (ColorSaturationConfig.isEnabled() && ColorSaturationConfig.getForceDisableFastRender()) {
             cir.setReturnValue(false);
         }
     }

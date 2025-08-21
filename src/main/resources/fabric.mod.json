@@ -16,7 +16,7 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "org.polyfrost.colorsaturation.ColorSaturation"
+                "value": "org.polyfrost.colorsaturation.ColorSaturationEntrypoint"
             }
         ]
     },
