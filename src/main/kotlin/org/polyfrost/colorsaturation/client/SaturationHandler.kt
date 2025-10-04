@@ -1,8 +1,9 @@
 package org.polyfrost.colorsaturation.client
 
-import dev.deftu.omnicore.client.OmniClient
-import dev.deftu.omnicore.client.render.OmniRenderEnv
-import dev.deftu.omnicore.common.OmniIdentifier
+import dev.deftu.omnicore.api.DEFAULT_NAMESPACE
+import dev.deftu.omnicore.api.client.client
+import dev.deftu.omnicore.api.client.render.GlCapabilities
+import dev.deftu.omnicore.api.identifierOrThrow
 import net.minecraft.client.shader.ShaderGroup
 import org.apache.logging.log4j.LogManager
 import org.polyfrost.oneconfig.internal.mixin.Mixin_ShaderListAccessor
@@ -10,7 +11,7 @@ import org.polyfrost.oneconfig.internal.mixin.Mixin_ShaderListAccessor
 object SaturationHandler {
     private val LOGGER = LogManager.getLogger(SaturationHandler::class.java)
 
-    private val LOCATION by lazy { OmniIdentifier.create(OmniIdentifier.MINECRAFT_NAMESPACE, "shaders/post/color_saturation.json") }
+    private val LOCATION by lazy { identifierOrThrow(DEFAULT_NAMESPACE, "shaders/post/color_saturation.json") }
 
     private var shader: ShaderGroup? = null
     private var prevWidth = 0
@@ -19,15 +20,14 @@ object SaturationHandler {
 
     @JvmStatic
     val isActive: Boolean
-        get() = OmniRenderEnv.isShaderSupported && shader != null
+        get() = GlCapabilities.isShaderSupported && shader != null
 
     @JvmStatic
     fun update() {
-        if (!OmniRenderEnv.isShaderSupported) {
+        if (!GlCapabilities.isShaderSupported) {
             return
         }
 
-        val client = OmniClient.getInstance()
         val mainTarget = client.framebuffer ?: return
         val width = mainTarget.framebufferWidth
         val height = mainTarget.framebufferHeight

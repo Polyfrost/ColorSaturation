@@ -1,6 +1,7 @@
 package org.polyfrost.colorsaturation.mixin.client;
 
-import dev.deftu.omnicore.common.OmniProfiler;
+import dev.deftu.omnicore.api.client.OmniClient;
+import dev.deftu.omnicore.api.client.OmniClientProfiler;
 import net.minecraft.client.renderer.EntityRenderer;
 import org.polyfrost.colorsaturation.client.ColorSaturationConfig;
 import org.polyfrost.colorsaturation.client.SaturationHandler;
@@ -12,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //#if MC >= 1.21.2
 //$$ import com.mojang.blaze3d.systems.RenderSystem;
-//$$ import dev.deftu.omnicore.client.OmniClient;
+//$$ import dev.deftu.omnicore.api.client.OmniClient;
 //$$ import net.minecraft.client.MinecraftClient;
 //$$ import net.minecraft.client.util.Pool;
 //$$ import org.spongepowered.asm.mixin.Final;
 //$$ import org.spongepowered.asm.mixin.Shadow;
 //#else
-import dev.deftu.omnicore.client.render.OmniGameRendering;
+import dev.deftu.omnicore.api.client.render.OmniRenderTicks;
 //#endif
 
 //#if MC >= 1.21.1
@@ -79,18 +80,18 @@ public class Mixin_EntityRenderer_SaturationHandler {
         }
 
         //#if MC >= 1.21.2
-        //$$ if (!OmniClient.getInstance().isFinishedLoading() || !OmniClient.hasWorld()) {
+        //$$ if (!OmniClient.get().isFinishedLoading() || OmniClient.getWorld() == null) {
         //$$     return;
         //$$ }
         //#endif
 
-        OmniProfiler.withProfiler("colorsaturation_applier", () -> {
+        OmniClientProfiler.withProfiler(OmniClient.get(), "colorsaturation_applier", () -> {
             //#if MC >= 1.21.2
             //$$ RenderSystem.resetTextureMatrix();
             //$$ SaturationHandler.render(this.client.getFramebuffer(), this.pool);
             //#else
             SaturationHandler.update();
-            float trueTickDelta = OmniGameRendering.getTickDelta(true);
+            float trueTickDelta = OmniRenderTicks.get();
             SaturationHandler.render(trueTickDelta);
             //#endif
         });

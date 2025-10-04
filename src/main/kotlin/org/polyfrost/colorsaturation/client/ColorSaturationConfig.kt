@@ -7,14 +7,10 @@ object ColorSaturationConfig : KtConfig(
     id = "${ColorSaturationConstants.ID}.json",
     title = ColorSaturationConstants.NAME,
     category = Category.QOL,
-    icon = "/colorsaturation/colorsaturation_dark.svg"
+    icon = "/assets/colorsaturation/colorsaturation_dark.svg"
 ) {
-
-    @JvmStatic
-    var isEnabled by switch(def = true, name = "Enabled")
-
-    @JvmStatic
-    var forceDisableFastRender by switch(def = true, name = "Force Disable Fast Render", description = "Forces OptiFine's Fast Render option to be disabled.")
+    @JvmStatic var isEnabled by switch(def = true, name = "Enabled")
+    @JvmStatic var forceDisableFastRender by switch(def = true, name = "Force Disable Fast Render", description = "Forces OptiFine's Fast Render option to be disabled.")
 
     var strength by slider(min = -1f, max = 5f, def = 1f, name = "Saturation Strength")
 
@@ -27,5 +23,4 @@ object ColorSaturationConfig : KtConfig(
         }
         //#endif
     }
-
 }
