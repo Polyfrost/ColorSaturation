@@ -10,8 +10,7 @@
         "client.compat.BlurHandlerMixin",
         "client.compat.BlurModMixin",
         "client.compat.OptifineConfigMixin",
-
-        "client.Mixin_EntityRenderer_SaturationHandler"
+        "client.Mixin_ApplySaturation"
     ],
     "verbose": true
 }

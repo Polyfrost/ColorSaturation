@@ -3,7 +3,7 @@ package org.polyfrost.colorsaturation.client
 import dev.deftu.omnicore.api.DEFAULT_NAMESPACE
 import dev.deftu.omnicore.api.client.client
 import dev.deftu.omnicore.api.client.render.GlCapabilities
-import dev.deftu.omnicore.api.identifierOrThrow
+import dev.deftu.omnicore.api.locationOrThrow
 import net.minecraft.client.shader.ShaderGroup
 import org.apache.logging.log4j.LogManager
 import org.polyfrost.oneconfig.internal.mixin.Mixin_ShaderListAccessor
@@ -11,7 +11,7 @@ import org.polyfrost.oneconfig.internal.mixin.Mixin_ShaderListAccessor
 object SaturationHandler {
     private val LOGGER = LogManager.getLogger(SaturationHandler::class.java)
 
-    private val LOCATION by lazy { identifierOrThrow(DEFAULT_NAMESPACE, "shaders/post/color_saturation.json") }
+    private val LOCATION by lazy { locationOrThrow(DEFAULT_NAMESPACE, "shaders/post/color_saturation.json") }
 
     private var shader: ShaderGroup? = null
     private var prevWidth = 0

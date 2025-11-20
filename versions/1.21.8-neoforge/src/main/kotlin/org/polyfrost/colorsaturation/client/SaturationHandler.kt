@@ -9,7 +9,7 @@ import com.mojang.blaze3d.shaders.UniformType
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
-import dev.deftu.omnicore.api.identifierOrThrow
+import dev.deftu.omnicore.api.locationOrThrow
 import org.polyfrost.colorsaturation.ColorSaturationConstants
 import java.util.OptionalInt
 import kotlin.use
@@ -17,9 +17,9 @@ import kotlin.use
 object SaturationHandler {
     private val pipeline by lazy {
         RenderPipeline.builder()
-            .withLocation(identifierOrThrow(ColorSaturationConstants.ID, "saturation_pipeline"))
+            .withLocation(locationOrThrow(ColorSaturationConstants.ID, "saturation_pipeline"))
             .withVertexShader("core/blit_screen")
-            .withFragmentShader(identifierOrThrow(ColorSaturationConstants.ID, "post/color_saturation"))
+            .withFragmentShader(locationOrThrow(ColorSaturationConstants.ID, "post/color_saturation"))
             .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
             .withDepthWrite(false)
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
