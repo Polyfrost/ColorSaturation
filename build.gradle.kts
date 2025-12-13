@@ -17,8 +17,8 @@ plugins {
 
 toolkitLoomHelper {
     useOneConfig {
-        version = "1.0.0-alpha.177"
-        loaderVersion = "1.1.0-alpha.53"
+        version = "1.0.0-alpha.181"
+        loaderVersion = "1.1.0-alpha.54"
 
         usePolyMixin = true
         polyMixinVersion = "0.8.4+build.7"
@@ -44,6 +44,10 @@ toolkitLoomHelper {
         // Configures the Mixin tweaker if we are building for Forge.
         useForgeMixin(modData.id)
     }
+}
+
+repositories {
+    maven("https://maven.bawnorton.com/releases")
 }
 
 dependencies {
