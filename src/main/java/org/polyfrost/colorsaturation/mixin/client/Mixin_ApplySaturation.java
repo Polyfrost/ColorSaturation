@@ -2,96 +2,68 @@ package org.polyfrost.colorsaturation.mixin.client;
 
 import dev.deftu.omnicore.api.client.OmniClient;
 import dev.deftu.omnicore.api.client.OmniClientProfiler;
-import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import org.polyfrost.colorsaturation.client.ColorSaturationConfig;
 import org.polyfrost.colorsaturation.client.SaturationHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-//#if MC >= 1.21.2
-//$$ import com.mojang.blaze3d.resource.CrossFrameResourcePool;
-//$$ import com.mojang.blaze3d.systems.RenderSystem;
-//$$ import dev.deftu.omnicore.api.client.OmniClient;
-//$$ import net.minecraft.client.Minecraft;
-//$$ import org.spongepowered.asm.mixin.Final;
-//$$ import org.spongepowered.asm.mixin.Shadow;
-//#else
-import dev.deftu.omnicore.api.client.render.OmniRenderTicks;
-//#endif
+//? if >= 1.21.4 {
+import com.mojang.blaze3d.resource.CrossFrameResourcePool;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Shadow;
+//?} else {
+/*import dev.deftu.omnicore.api.client.render.OmniRenderTicks;
+*///?}
 
-//#if MC >= 1.21.1
-//$$ import net.minecraft.client.DeltaTracker;
-//#endif
+import net.minecraft.client.DeltaTracker;
 
-@Mixin(EntityRenderer.class)
+@Mixin(GameRenderer.class)
 public class Mixin_ApplySaturation {
-    //#if MC >= 1.21.2
-    //$$ @Shadow private Minecraft minecraft;
-    //$$ @Shadow @Final private CrossFrameResourcePool resourcePool;
-    //#endif
-
-    //#if MC < 1.16.5
-    @Inject(method = "isShaderActive", at = @At("HEAD"), cancellable = true)
-    private void colorsaturation$cancelShaderActive(CallbackInfoReturnable<Boolean> cir) {
-        if (SaturationHandler.isActive()) {
-            cir.setReturnValue(true);
-        }
-    }
-    //#endif
+    //? if >= 1.21.4 {
+    @Final @Shadow private Minecraft minecraft;
+    @Shadow @Final private CrossFrameResourcePool resourcePool;
+    //?}
 
     @Inject(
-            //#if MC >= 1.16.5
-            //$$ method = "render",
-            //#else
-            method = "updateCameraAndRender",
-            //#endif
+            method = "render",
 
-            //#if MC >= 1.21.2
-            //$$ at = @At(
-            //$$     value = "INVOKE",
-            //$$     target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V"
-            //$$ )
-            //#else
+            //? if >= 1.21.4 {
             at = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V"
+            )
+            //?} else {
+            /*at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/RenderGlobal;renderEntityOutlineFramebuffer()V"
             )
-            //#endif
+            *///?}
     )
-    private void colorsaturation$applySaturation(
-            //#if MC >= 1.21.1
-            //$$ DeltaTracker deltaTracker,
-            //#else
-            float tickDelta,
-            long nanoTime,
-            //#endif
-            //#if MC >= 1.16.5
-            //$$ boolean isTicking,
-            //#endif
-            CallbackInfo ci
-    ) {
+    private void colorsaturation$applySaturation(DeltaTracker deltaTracker, boolean isTicking, CallbackInfo ci) {
         if (!ColorSaturationConfig.isEnabled()) {
             return;
         }
 
-        //#if MC >= 1.21.2
-        //$$ if (!OmniClient.get().isGameLoadFinished() || OmniClient.getWorld() == null) {
-        //$$     return;
-        //$$ }
-        //#endif
+        //? if >= 1.21.4 {
+        if (!OmniClient.get().isGameLoadFinished() || OmniClient.getWorld() == null) {
+            return;
+        }
+        //?}
 
         OmniClientProfiler.withProfiler(OmniClient.get(), "colorsaturation_applier", () -> {
-            //#if MC >= 1.21.2
-            //$$ RenderSystem.resetTextureMatrix();
-            //$$ SaturationHandler.render(this.minecraft.getMainRenderTarget(), this.resourcePool);
-            //#else
-            SaturationHandler.update();
+            //? if >= 1.21.4 {
+            RenderSystem.resetTextureMatrix();
+            SaturationHandler.render(this.minecraft.getMainRenderTarget(), this.resourcePool);
+            //?} else {
+            /*SaturationHandler.update();
             float trueTickDelta = OmniRenderTicks.get();
             SaturationHandler.render(trueTickDelta);
-            //#endif
+            *///?}
         });
     }
 }

@@ -11,11 +11,6 @@ import net.minecraft.client.renderer.PostChain
 import org.apache.logging.log4j.LogManager
 import org.polyfrost.colorsaturation.ColorSaturationConstants
 
-//#if MC >= 1.21.5
-//$$ import com.mojang.blaze3d.systems.RenderPass
-//$$ import java.util.function.Consumer
-//#endif
-
 object SaturationHandler {
     private val LOGGER = LogManager.getLogger(SaturationHandler::class.java)
 
@@ -38,13 +33,7 @@ object SaturationHandler {
             null
         }
 
-        //#if MC >= 1.21.5
-        //$$ val consumer = Consumer { renderPass: RenderPass ->
-        //$$     renderPass.setUniform("Saturation", ColorSaturationConfig.strength)
-        //$$ }
-        //#else
         shader?.setUniform("Saturation", ColorSaturationConfig.strength)
-        //#endif
 
         val builder = FrameGraphBuilder()
         shader?.addToFrame(
@@ -54,9 +43,6 @@ object SaturationHandler {
                 PostChain.MAIN_TARGET_ID,
                 builder.importExternal("main", renderTarget)
             ),
-            //#if MC >= 1.21.5
-            //$$ consumer,
-            //#endif
         )
 
         builder.execute(resourcePool)

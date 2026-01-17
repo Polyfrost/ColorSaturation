@@ -4,7 +4,7 @@ import dev.deftu.omnicore.api.DEFAULT_NAMESPACE
 import dev.deftu.omnicore.api.client.client
 import dev.deftu.omnicore.api.client.render.GlCapabilities
 import dev.deftu.omnicore.api.locationOrThrow
-import net.minecraft.client.shader.ShaderGroup
+import net.minecraft.client.renderer.PostChain
 import org.apache.logging.log4j.LogManager
 import org.polyfrost.oneconfig.internal.mixin.Mixin_ShaderListAccessor
 
@@ -13,7 +13,7 @@ object SaturationHandler {
 
     private val LOCATION by lazy { locationOrThrow(DEFAULT_NAMESPACE, "shaders/post/color_saturation.json") }
 
-    private var shader: ShaderGroup? = null
+    private var shader: PostChain? = null
     private var prevWidth = 0
     private var prevHeight = 0
     private var lastStrength = Float.NaN
@@ -28,9 +28,9 @@ object SaturationHandler {
             return
         }
 
-        val mainTarget = client.framebuffer ?: return
-        val width = mainTarget.framebufferWidth
-        val height = mainTarget.framebufferHeight
+        val mainTarget = client.mainRenderTarget ?: return
+        val width = mainTarget.width
+        val height = mainTarget.height
         if (width <= 0 || height <= 0) {
             return
         }
@@ -42,17 +42,13 @@ object SaturationHandler {
 
         try {
             LOGGER.info("Invalidating saturation shader group, rebuilding with new dimensions: {}x{}", width, height)
-            //#if MC >= 1.16.5
-            //$$ shader?.close()
-            //#else
-            shader?.deleteShaderGroup()
-            //#endif
+            shader?.close()
         } catch (_: Throwable) {  }
 
         try {
             LOGGER.info("Building saturation shader group with dimensions: {}x{}", width, height)
-            shader = ShaderGroup(client.textureManager, client.resourceManager, mainTarget, LOCATION)
-            shader!!.createBindFramebuffers(width, height)
+            shader = PostChain(client.textureManager, client.resourceManager, mainTarget, LOCATION)
+            shader!!.resize(width, height)
             prevWidth = width
             prevHeight = height
             lastStrength = Float.NaN
@@ -70,7 +66,7 @@ object SaturationHandler {
 
         val shader = shader ?: return
         updateShaderUniforms()
-        shader.loadShaderGroup(tickDelta)
+        shader.process(tickDelta)
     }
 
     fun updateShaderUniforms() {
@@ -91,14 +87,8 @@ object SaturationHandler {
         }
 
         for (pass in shaders) {
-            val uniform = pass
-                //#if MC >= 1.16.5
-                //$$ .effect
-                //$$ .getUniform("Saturation")
-                //#else
-                .shaderManager
-                .getShaderUniform("Saturation")
-                //#endif
+            val uniform = pass.effect.getUniform("Saturation")
+
             if (uniform == null) {
                 LOGGER.debug("Uniform 'Saturation' missing on pass {}", pass)
                 continue
