@@ -8,8 +8,6 @@
     },
     "client": [
         "client.compat.BlurHandlerMixin",
-        "client.compat.BlurModMixin",
-        "client.compat.OptifineConfigMixin",
         "client.Mixin_ApplySaturation"
     ],
     "verbose": true
