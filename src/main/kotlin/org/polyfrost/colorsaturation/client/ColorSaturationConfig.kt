@@ -1,26 +1,28 @@
 package org.polyfrost.colorsaturation.client
 
 import org.polyfrost.colorsaturation.ColorSaturationConstants
-import org.polyfrost.oneconfig.api.config.v1.KtConfig
+import org.polyfrost.oneconfig.api.config.v1.Config
+import org.polyfrost.oneconfig.api.config.v1.annotations.Slider
+import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
 
-object ColorSaturationConfig : KtConfig(
-    id = "${ColorSaturationConstants.ID}.json",
-    title = ColorSaturationConstants.NAME,
-    category = Category.QOL,
-    icon = "/assets/colorsaturation/colorsaturation_dark.svg"
+object ColorSaturationConfig : Config(
+    "${ColorSaturationConstants.ID}.json",
+    "/assets/colorsaturation/colorsaturation_dark.svg",
+    ColorSaturationConstants.NAME,
+    Category.QOL,
 ) {
-    @JvmStatic var isEnabled by switch(def = true, name = "Enabled")
-    @JvmStatic var forceDisableFastRender by switch(def = true, name = "Force Disable Fast Render", description = "Forces OptiFine's Fast Render option to be disabled.")
+    @JvmField
+    @Switch(title = "Enabled")
+    var isEnabled = true
 
-    var strength by slider(min = -1f, max = 5f, def = 1f, name = "Saturation Strength")
+    @JvmField
+    @Slider(title = "Saturation Strength", min = -1f, max = 5f, step = 0.05f)
+    var strength = 1f
 
     init {
-        //#if MC < 1.21.2
         addCallback("strength") {
-            if (isEnabled) {
-                SaturationHandler.updateShaderUniforms()
-            }
+            SaturationHandler.updateShaderUniforms()
         }
-        //#endif
+        save()
     }
 }

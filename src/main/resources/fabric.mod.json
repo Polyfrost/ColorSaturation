@@ -1,8 +1,9 @@
 {
     "schemaVersion": 1,
     "id": "${mod_id}",
-    "version": "${mod_version}",
     "name": "${mod_name}",
+    "version": "${mod_version}",
+    "description": "A mod which changes Minecraft's color saturation.",
     "authors": [
         "Polyfrost"
     ],
@@ -11,7 +12,7 @@
         "sources": "https://github.com/Polyfrost/${mod_name}"
     },
     "license": "GPL-3.0-or-later",
-    "environment": "*",
+    "environment": "client",
     "entrypoints": {
         "client": [
             {
@@ -24,7 +25,8 @@
         "mixins.${mod_id}.json"
     ],
     "depends": {
-        "fabricloader": ">=0.15.11",
+        "minecraft": "${minecraft_version_range}",
+        "fabricloader": ">=${loader_version}",
         "fabric-language-kotlin": "*"
     }
 }

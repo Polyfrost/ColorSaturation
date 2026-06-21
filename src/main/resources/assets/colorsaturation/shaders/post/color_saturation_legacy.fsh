@@ -1,8 +1,9 @@
-#version 120
+#version 150
 
 uniform sampler2D DiffuseSampler;
 
-varying vec2 texCoord;
+in vec2 texCoord;
+out vec4 fragColor;
 
 uniform vec3 Gray = vec3(0.3, 0.59, 0.11);
 uniform vec3 RedMatrix = vec3(1.0, 0.0, 0.0);
@@ -13,7 +14,7 @@ uniform vec3 ColorScale = vec3(1.0, 1.0, 1.0);
 uniform float Saturation = 1.0;
 
 void main() {
-    vec4 inTexel = texture2D(DiffuseSampler, texCoord);
+    vec4 inTexel = texture(DiffuseSampler, texCoord);
 
     float redValue = dot(inTexel.rgb, RedMatrix);
     float greenValue = dot(inTexel.rgb, GreenMatrix);
@@ -26,5 +27,5 @@ void main() {
     vec3 chroma = outColor - luma;
     outColor = (chroma * Saturation) + luma;
 
-    gl_FragColor = vec4(outColor, inTexel.a);
+    fragColor = vec4(outColor, inTexel.a);
 }

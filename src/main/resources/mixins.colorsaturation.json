@@ -1,5 +1,5 @@
 {
-    "compatibilityLevel": "JAVA_8",
+    "compatibilityLevel": "JAVA_21",
     "minVersion": "0.7",
     "package": "org.polyfrost.colorsaturation.mixin",
     "refmap": "mixins.${mod_id}.refmap.json",
@@ -7,9 +7,6 @@
         "maxShiftBy": 5
     },
     "client": [
-        "client.compat.BlurHandlerMixin",
-        "client.compat.BlurModMixin",
-        "client.compat.OptifineConfigMixin",
         "client.Mixin_ApplySaturation"
     ],
     "verbose": true
