@@ -28,10 +28,7 @@ object FullscreenQuad {
         builder.addVertex(-1f, 1f, 0f)
 
         builder.buildOrThrow().use { mesh ->
-            //? if >=26.2
-            /*RenderSystem.getDevice().createBuffer({ "ColorSaturation fullscreen quad" }, GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer())*/
-            //? if <26.2
-            DefaultVertexFormat.POSITION.uploadImmediateVertexBuffer(mesh.vertexBuffer())
+            RenderSystem.getDevice().createBuffer({ "ColorSaturation fullscreen quad" }, GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer())
         }
     }
 }

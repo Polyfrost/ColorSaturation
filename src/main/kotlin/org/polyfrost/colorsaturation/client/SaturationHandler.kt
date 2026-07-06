@@ -164,7 +164,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import org.polyfrost.colorsaturation.ColorSaturationConstants
-//? if >=26.2
+//? if >=26.1
 /*import java.util.Optional*/
 //? if <26.2
 import java.util.OptionalInt
@@ -178,7 +178,7 @@ object SaturationHandler {
             //? if >=26.2 {
             /*.withVertexBinding(0, DefaultVertexFormat.POSITION)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .withDepthStencilState(DepthStencilState(CompareOp.ALWAYS_PASS, false))
+            .withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
             .withBindGroupLayout(
                 BindGroupLayout.builder()
@@ -191,7 +191,7 @@ object SaturationHandler {
             .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
             //?}
             //? if >=26.1 && <26.2 {
-            /*.withDepthStencilState(DepthStencilState(CompareOp.ALWAYS_PASS, false))
+            /*.withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
             *///?}
             //? if <26.1 {
@@ -268,7 +268,7 @@ object SaturationHandler {
                     //?}
                     renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
                     //? if >=26.2 {
-                    /*renderPass.drawIndexed(0, 0, 6, 1, 0)*/
+                    /*renderPass.drawIndexed(6, 1, 0, 0, 0)*/
                     //?}
                     //? if <26.2 {
                     renderPass.drawIndexed(0, 0, 6, 1)
