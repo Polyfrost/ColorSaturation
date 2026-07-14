@@ -48,6 +48,9 @@ repositories {
         content { includeGroup("net.azureaaron") }
     }
     maven("https://redirector.kotlinlang.org/maven/compose-dev")
+    maven("https://maven.terraformersmc.com/releases") {
+        content { includeGroup("com.terraformersmc") }
+    }
 }
 
 loom {
