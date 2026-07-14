@@ -31,6 +31,7 @@ repositories {
     maven("https://maven.gegy.dev/releases")
     maven("https://central.sonatype.com/repository/maven-snapshots")
     maven("https://maven.logix.dev/snapshots") {
+        content { excludeGroup("com.terraformersmc") }
         content { excludeGroup("net.kyori") }
     }
     maven("https://nexus.prsm.wtf/repository/maven-public/maven-repo/releases/")
