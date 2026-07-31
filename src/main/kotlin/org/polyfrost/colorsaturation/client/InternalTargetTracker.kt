@@ -23,8 +23,7 @@ object InternalTargetTracker {
         val height = renderTarget.height
 
         //? if >=26.2 {
-        /*/
-        val format = renderTarget.getColorTexture()!!.getFormat()
+        /*val format = renderTarget.getColorTexture()!!.getFormat()
         if (width == prevWidth && height == prevHeight && format == prevFormat && target != null) {
             return
         }
