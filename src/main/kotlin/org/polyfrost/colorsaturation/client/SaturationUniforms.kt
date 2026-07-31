@@ -9,6 +9,8 @@ object SaturationUniforms {
     private val blockSize = Std140SizeCalculator().putFloat().get()
     private val device get() = RenderSystem.getDevice()
 
+    private var uploaded = Float.NaN
+
     val buffer: GpuBuffer by lazy {
         device.createBuffer(
             { "ColorSaturation_UBO" },
@@ -21,6 +23,10 @@ object SaturationUniforms {
     }
 
     fun upload(strength: Float) {
+        if (strength == uploaded) {
+            return
+        }
+
         //? if >=26.2 {
         /*buffer.map(false, true).use { mapped ->
             mapped.data().putFloat(strength)
@@ -30,6 +36,8 @@ object SaturationUniforms {
             mapped.data().putFloat(strength)
         }
         //?}
+
+        uploaded = strength
     }
 }
 //?}

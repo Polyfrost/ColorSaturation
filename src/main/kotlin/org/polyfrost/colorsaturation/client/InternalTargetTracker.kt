@@ -15,15 +15,32 @@ object InternalTargetTracker {
 
     private var prevWidth = -1
     private var prevHeight = -1
+    //? if >=26.2
+    /*private var prevFormat: GpuFormat? = null*/
 
-    fun updateSize(width: Int, height: Int) {
+    fun updateSize(renderTarget: RenderTarget) {
+        val width = renderTarget.width
+        val height = renderTarget.height
+
+        //? if >=26.2 {
+        /*/
+        val format = renderTarget.getColorTexture()!!.getFormat()
+        if (width == prevWidth && height == prevHeight && format == prevFormat && target != null) {
+            return
+        }
+
+        framebufferFactory = createTargetDescriptor(width, height, format)
+        prevFormat = format
+        *///?}
+        //? if <26.2 {
         if (width == prevWidth && height == prevHeight && target != null) {
             return
         }
 
-        if (framebufferFactory == null || framebufferFactory?.width != width || framebufferFactory?.height != height) {
+        if (framebufferFactory?.width != width || framebufferFactory?.height != height) {
             framebufferFactory = createTargetDescriptor(width, height)
         }
+        //?}
 
         free()
         target = framebufferFactory?.allocate()
@@ -32,16 +49,20 @@ object InternalTargetTracker {
     }
 
     fun free() {
-        target?.let { framebufferFactory?.free(it) }
+        val allocated = target ?: return
+        framebufferFactory?.free(allocated)
         target = null
         prevWidth = -1
         prevHeight = -1
     }
 }
 
+//? if >=26.2 {
+/*fun createTargetDescriptor(width: Int, height: Int, format: GpuFormat): RenderTargetDescriptor =
+    RenderTargetDescriptor(width, height, false, Vector4f(0f, 0f, 0f, 0f), format)
+*///?}
+//? if <26.2 {
 fun createTargetDescriptor(width: Int, height: Int): RenderTargetDescriptor =
-    //? if >=26.2
-    /*RenderTargetDescriptor(width, height, false, Vector4f(0f, 0f, 0f, 0f), GpuFormat.RGBA8_UNORM)*/
-    //? if <26.2
     RenderTargetDescriptor(width, height, false, 0)
+//?}
 //?}

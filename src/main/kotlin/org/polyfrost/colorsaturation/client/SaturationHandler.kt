@@ -18,7 +18,7 @@ object SaturationHandler {
 
     @JvmStatic
     val isActive: Boolean
-        get() = ColorSaturationConfig.isEnabled
+        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentityStrength
 
     @JvmStatic
     fun updateShaderUniforms() {
@@ -92,7 +92,7 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
 
     @JvmStatic
     val isActive: Boolean
-        get() = ColorSaturationConfig.isEnabled
+        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentityStrength
 
     @JvmStatic
     fun updateShaderUniforms() {
@@ -143,7 +143,6 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
 *///?}
 
 //? if >1.21.5 {
-import com.mojang.blaze3d.framegraph.FrameGraphBuilder
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.pipeline.RenderTarget
 //? if >=26.2
@@ -161,6 +160,8 @@ import com.mojang.blaze3d.platform.DepthTestFunction
 import com.mojang.blaze3d.resource.CrossFrameResourcePool
 import com.mojang.blaze3d.shaders.UniformType
 import com.mojang.blaze3d.systems.RenderSystem
+//? if >=1.21.11
+/*import com.mojang.blaze3d.textures.FilterMode*/
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import org.polyfrost.colorsaturation.ColorSaturationConstants
@@ -173,11 +174,11 @@ object SaturationHandler {
     private val pipeline by lazy {
         RenderPipeline.builder()
             .withLocation(location(ColorSaturationConstants.ID, "saturation_pipeline"))
-            .withVertexShader(location(ColorSaturationConstants.ID, "core/fullscreen_quad"))
+            .withVertexShader(location(ColorSaturationConstants.ID, "core/fullscreen_triangle"))
             .withFragmentShader(location(ColorSaturationConstants.ID, "post/color_saturation"))
             //? if >=26.2 {
             /*.withVertexBinding(0, DefaultVertexFormat.POSITION)
-            .withPrimitiveTopology(PrimitiveTopology.QUADS)
+            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
             .withBindGroupLayout(
@@ -188,7 +189,7 @@ object SaturationHandler {
             )
             *///?}
             //? if <26.2 {
-            .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+            .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.TRIANGLES)
             //?}
             //? if >=26.1 && <26.2 {
             /*.withDepthStencilState(Optional.empty())
@@ -208,7 +209,7 @@ object SaturationHandler {
 
     @JvmStatic
     val isActive: Boolean
-        get() = ColorSaturationConfig.isEnabled
+        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentityStrength
 
     @JvmStatic
     fun updateShaderUniforms() {
@@ -217,68 +218,59 @@ object SaturationHandler {
     @JvmStatic
     fun render(renderTarget: RenderTarget, resourcePool: CrossFrameResourcePool) {
         if (!isActive) {
+            InternalTargetTracker.free()
             return
         }
 
-        InternalTargetTracker.updateSize(renderTarget.width, renderTarget.height)
+        InternalTargetTracker.updateSize(renderTarget)
         SaturationUniforms.upload(ColorSaturationConfig.strength)
 
         val tempTarget = InternalTargetTracker.target ?: return
-        val builder = FrameGraphBuilder()
-        val mainNode = builder.importExternal("main", renderTarget)
-        val tempNode = builder.importExternal("colorsaturation_temp", tempTarget)
+        val commandEncoder = RenderSystem.getDevice().createCommandEncoder()
 
-        builder.addPass("ColorSaturation/Saturation").apply {
-            reads(mainNode)
-            readsAndWrites(tempNode)
+        commandEncoder.copyTextureToTexture(
+            renderTarget.getColorTexture()!!,
+            tempTarget.getColorTexture()!!,
+            0, 0, 0, 0, 0, renderTarget.width, renderTarget.height,
+        )
 
-            executes {
-                //? if >=26.2 {
-                /*val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(PrimitiveTopology.QUADS)*/
-                //?}
-                //? if <26.2 {
-                val autoStorageIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS)
-                //?}
-                val indexBuffer = autoStorageIndexBuffer.getBuffer(6)
-                val vertexBuffer = FullscreenQuad.vertexBuffer
+        val vertexBuffer = FullscreenTriangle.vertexBuffer
 
-                RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-                    { "ColorSaturation/Saturation" },
-                    tempTarget.getColorTextureView()!!,
-                    //? if >=26.2 {
-                    /*Optional.empty()*/
-                    //?}
-                    //? if <26.2 {
-                    OptionalInt.empty()
-                    //?}
-                ).use { renderPass ->
-                    renderPass.setPipeline(pipeline)
-                    //? if >=26.2 {
-                    /*renderPass.setVertexBuffer(0, vertexBuffer.slice())*/
-                    //?}
-                    //? if <26.2 {
-                    renderPass.setVertexBuffer(0, vertexBuffer)
-                    //?}
-                    renderPass.setIndexBuffer(indexBuffer, autoStorageIndexBuffer.type())
-                    //? if >=1.21.11 {
-                    /*renderPass.bindTexture("DiffuseSampler", renderTarget.getColorTextureView()!!, SaturationSampler.linearClamp)*/
-                    //?}
-                    //? if <1.21.11 {
-                    renderPass.bindSampler("DiffuseSampler", renderTarget.getColorTextureView()!!)
-                    //?}
-                    renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
-                    //? if >=26.2 {
-                    /*renderPass.drawIndexed(6, 1, 0, 0, 0)*/
-                    //?}
-                    //? if <26.2 {
-                    renderPass.drawIndexed(0, 0, 6, 1)
-                    //?}
-                }
-            }
+        commandEncoder.createRenderPass(
+            { "ColorSaturation/Saturation" },
+            renderTarget.getColorTextureView()!!,
+            //? if >=26.2 {
+            /*Optional.empty()*/
+            //?}
+            //? if <26.2 {
+            OptionalInt.empty()
+            //?}
+        ).use { renderPass ->
+            renderPass.setPipeline(pipeline)
+            //? if >=26.2 {
+            /*renderPass.setVertexBuffer(0, vertexBuffer.slice())*/
+            //?}
+            //? if <26.2 {
+            renderPass.setVertexBuffer(0, vertexBuffer)
+            //?}
+            //? if >=1.21.11 {
+            /*renderPass.bindTexture(
+                "DiffuseSampler",
+                tempTarget.getColorTextureView()!!,
+                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
+            )*/
+            //?}
+            //? if <1.21.11 {
+            renderPass.bindSampler("DiffuseSampler", tempTarget.getColorTextureView()!!)
+            //?}
+            renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
+            //? if >=26.2 {
+            /*renderPass.draw(FullscreenTriangle.VERTEX_COUNT, 1, 0, 0)*/
+            //?}
+            //? if <26.2 {
+            renderPass.draw(0, FullscreenTriangle.VERTEX_COUNT)
+            //?}
         }
-
-        builder.execute(resourcePool)
-        RenderTargetBlitter.blit(tempTarget, renderTarget)
     }
 }
 //?}

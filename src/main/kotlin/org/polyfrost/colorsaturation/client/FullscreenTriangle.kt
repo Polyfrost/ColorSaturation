@@ -10,25 +10,26 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 
-object FullscreenQuad {
+object FullscreenTriangle {
+    const val VERTEX_COUNT = 3
+
     val vertexBuffer: GpuBuffer by lazy {
-        val storage = ByteBufferBuilder(DefaultVertexFormat.POSITION.vertexSize * 4)
+        val storage = ByteBufferBuilder(DefaultVertexFormat.POSITION.vertexSize * VERTEX_COUNT)
         val builder = BufferBuilder(
             storage,
             //? if >=26.2
-            /*PrimitiveTopology.QUADS,*/
+            /*PrimitiveTopology.TRIANGLES,*/
             //? if <26.2
-            VertexFormat.Mode.QUADS,
+            VertexFormat.Mode.TRIANGLES,
             DefaultVertexFormat.POSITION
         )
 
         builder.addVertex(-1f, -1f, 0f)
-        builder.addVertex(1f, -1f, 0f)
-        builder.addVertex(1f, 1f, 0f)
-        builder.addVertex(-1f, 1f, 0f)
+        builder.addVertex(3f, -1f, 0f)
+        builder.addVertex(-1f, 3f, 0f)
 
         builder.buildOrThrow().use { mesh ->
-            RenderSystem.getDevice().createBuffer({ "ColorSaturation fullscreen quad" }, GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer())
+            RenderSystem.getDevice().createBuffer({ "ColorSaturation fullscreen triangle" }, GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer())
         }
     }
 }
