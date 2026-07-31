@@ -14,7 +14,7 @@ object ColorSaturationConfig : Config(
 ) {
     @JvmField
     @Switch(title = "Enabled")
-    var isEnabled = true
+    var isEnabled = false
 
     @JvmField
     @Slider(title = "Saturation Strength", min = -1f, max = 5f, step = 0.05f)
