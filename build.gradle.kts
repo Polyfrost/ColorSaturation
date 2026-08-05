@@ -120,7 +120,10 @@ tasks.processResources {
                             { "sampler_name": "DiffuseSampler", "target": "minecraft:main" }
                         ],
                         "uniforms": [
-                            { "name": "Saturation", "values": [ 1.0 ] }
+                            { "name": "Saturation", "values": [ 1.0 ] },
+                            { "name": "Contrast", "values": [ 1.0 ] },
+                            { "name": "Brightness", "values": [ 1.0 ] },
+                            { "name": "Hue", "values": [ 0.0 ] }
                         ],
                         "output": "swap"
                     },
@@ -147,7 +150,10 @@ tasks.processResources {
                             { "sampler_name": "DiffuseSampler", "target": "minecraft:main" }
                         ],
                         "uniforms": [
-                            { "name": "Saturation", "type": "float", "values": [ 1.0 ] }
+                            { "name": "Saturation", "type": "float", "values": [ 1.0 ] },
+                            { "name": "Contrast", "type": "float", "values": [ 1.0 ] },
+                            { "name": "Brightness", "type": "float", "values": [ 1.0 ] },
+                            { "name": "Hue", "type": "float", "values": [ 0.0 ] }
                         ],
                         "output": "swap"
                     },
@@ -183,6 +189,21 @@ tasks.processResources {
                                     "name": "Saturation",
                                     "type": "float",
                                     "value": 1.0
+                                },
+                                {
+                                    "name": "Contrast",
+                                    "type": "float",
+                                    "value": 1.0
+                                },
+                                {
+                                    "name": "Brightness",
+                                    "type": "float",
+                                    "value": 1.0
+                                },
+                                {
+                                    "name": "Hue",
+                                    "type": "float",
+                                    "value": 0.0
                                 }
                             ]
                         },
@@ -217,6 +238,21 @@ tasks.processResources {
                                     "name": "Saturation",
                                     "type": "float",
                                     "value": 1.0
+                                },
+                                {
+                                    "name": "Contrast",
+                                    "type": "float",
+                                    "value": 1.0
+                                },
+                                {
+                                    "name": "Brightness",
+                                    "type": "float",
+                                    "value": 1.0
+                                },
+                                {
+                                    "name": "Hue",
+                                    "type": "float",
+                                    "value": 0.0
                                 }
                             ]
                         },

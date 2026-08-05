@@ -36,6 +36,7 @@ public class Mixin_ApplySaturation {
     )
     private void colorsaturation$applySaturation(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
         if (!ColorSaturationConfig.isEnabled || !this.minecraft.isGameLoadFinished() || this.minecraft.level == null) {
+            SaturationHandler.free();
             return;
         }
 

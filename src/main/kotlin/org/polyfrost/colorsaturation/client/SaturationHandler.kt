@@ -18,11 +18,23 @@ object SaturationHandler {
 
     @JvmStatic
     val isActive: Boolean
-        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentityStrength
+        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentity
 
     @JvmStatic
     fun updateShaderUniforms() {
-        postChain?.setUniform("Saturation", ColorSaturationConfig.strength)
+        val chain = postChain ?: return
+        chain.setUniform("Saturation", ColorSaturationConfig.strength)
+        chain.setUniform("Contrast", ColorSaturationConfig.contrast)
+        chain.setUniform("Brightness", ColorSaturationConfig.brightness)
+        chain.setUniform("Hue", ColorSaturationConfig.hue)
+    }
+
+    @JvmStatic
+    fun free() {
+        postChain?.close()
+        postChain = null
+        prevWidth = -1
+        prevHeight = -1
     }
 
     @JvmStatic
@@ -92,10 +104,14 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
 
     @JvmStatic
     val isActive: Boolean
-        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentityStrength
+        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentity
 
     @JvmStatic
     fun updateShaderUniforms() {
+    }
+
+    @JvmStatic
+    fun free() {
     }
 
     @JvmStatic
@@ -125,10 +141,16 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
             targetBundle,
             Consumer { renderPass: com.mojang.blaze3d.systems.RenderPass ->
                 renderPass.setUniform("Saturation", ColorSaturationConfig.strength)
+                renderPass.setUniform("Contrast", ColorSaturationConfig.contrast)
+                renderPass.setUniform("Brightness", ColorSaturationConfig.brightness)
+                renderPass.setUniform("Hue", ColorSaturationConfig.hue)
             }
         )
         //?} else {
         /*shader?.setUniform("Saturation", ColorSaturationConfig.strength)
+        shader?.setUniform("Contrast", ColorSaturationConfig.contrast)
+        shader?.setUniform("Brightness", ColorSaturationConfig.brightness)
+        shader?.setUniform("Hue", ColorSaturationConfig.hue)
         shader?.addToFrame(
             builder,
             renderTarget.viewWidth,
@@ -171,48 +193,65 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
 import java.util.OptionalInt
 
 object SaturationHandler {
-    private val pipeline by lazy {
-        RenderPipeline.builder()
-            .withLocation(location(ColorSaturationConstants.ID, "saturation_pipeline"))
+    private val saturationPipeline by lazy {
+        createPipeline("saturation_pipeline", "post/color_saturation", true)
+    }
+
+    private val blitPipeline by lazy {
+        createPipeline("blit_pipeline", "post/blit", false)
+    }
+
+    private fun createPipeline(name: String, fragmentShader: String, hasUniforms: Boolean): RenderPipeline {
+        val builder = RenderPipeline.builder()
+            .withLocation(location(ColorSaturationConstants.ID, name))
             .withVertexShader(location(ColorSaturationConstants.ID, "core/fullscreen_triangle"))
-            .withFragmentShader(location(ColorSaturationConstants.ID, "post/color_saturation"))
-            //? if >=26.2 {
-            /*.withVertexBinding(0, DefaultVertexFormat.POSITION)
+            .withFragmentShader(location(ColorSaturationConstants.ID, fragmentShader))
+
+        //? if >=26.2 {
+        /*builder.withVertexBinding(0, DefaultVertexFormat.POSITION)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
-            .withBindGroupLayout(
-                BindGroupLayout.builder()
-                    .withSampler("DiffuseSampler")
-                    .withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
-                    .build()
-            )
-            *///?}
-            //? if <26.2 {
-            .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.TRIANGLES)
-            //?}
-            //? if >=26.1 && <26.2 {
-            /*.withDepthStencilState(Optional.empty())
+
+        val bindGroupLayout = BindGroupLayout.builder().withSampler("DiffuseSampler")
+        if (hasUniforms) {
+            bindGroupLayout.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
+        }
+        builder.withBindGroupLayout(bindGroupLayout.build())
+        *///?}
+        //? if <26.2 {
+        builder.withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.TRIANGLES)
+        //?}
+        //? if >=26.1 && <26.2 {
+        /*builder.withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
-            *///?}
-            //? if <26.1 {
-            .withDepthWrite(false)
+        *///?}
+        //? if <26.1 {
+        builder.withDepthWrite(false)
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .withColorWrite(true, true)
-            //?}
-            //? if <26.2 {
-            .withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
-            .withSampler("DiffuseSampler")
-            //?}
-            .build()
+        //?}
+        //? if <26.2 {
+        if (hasUniforms) {
+            builder.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
+        }
+        builder.withSampler("DiffuseSampler")
+        //?}
+
+        return builder.build()
     }
 
     @JvmStatic
     val isActive: Boolean
-        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentityStrength
+        get() = ColorSaturationConfig.isEnabled && !ColorSaturationConfig.isIdentity
 
     @JvmStatic
     fun updateShaderUniforms() {
+    }
+
+    @JvmStatic
+    fun free() {
+        InternalTargetTracker.free()
     }
 
     @JvmStatic
@@ -223,22 +262,31 @@ object SaturationHandler {
         }
 
         InternalTargetTracker.updateSize(renderTarget)
-        SaturationUniforms.upload(ColorSaturationConfig.strength)
-
-        val tempTarget = InternalTargetTracker.target ?: return
-        val commandEncoder = RenderSystem.getDevice().createCommandEncoder()
-
-        commandEncoder.copyTextureToTexture(
-            renderTarget.getColorTexture()!!,
-            tempTarget.getColorTexture()!!,
-            0, 0, 0, 0, 0, renderTarget.width, renderTarget.height,
+        SaturationUniforms.upload(
+            ColorSaturationConfig.strength,
+            ColorSaturationConfig.contrast,
+            ColorSaturationConfig.brightness,
+            ColorSaturationConfig.hue,
         )
 
+        val tempTarget = InternalTargetTracker.target ?: return
+        drawPass("ColorSaturation/Saturation", tempTarget, renderTarget, saturationPipeline, true)
+        drawPass("ColorSaturation/Blit", renderTarget, tempTarget, blitPipeline, false)
+    }
+
+    private fun drawPass(
+        label: String,
+        output: RenderTarget,
+        input: RenderTarget,
+        pipeline: RenderPipeline,
+        hasUniforms: Boolean,
+    ) {
+        val commandEncoder = RenderSystem.getDevice().createCommandEncoder()
         val vertexBuffer = FullscreenTriangle.vertexBuffer
 
         commandEncoder.createRenderPass(
-            { "ColorSaturation/Saturation" },
-            renderTarget.getColorTextureView()!!,
+            { label },
+            output.getColorTextureView()!!,
             //? if >=26.2 {
             /*Optional.empty()*/
             //?}
@@ -256,14 +304,16 @@ object SaturationHandler {
             //? if >=1.21.11 {
             /*renderPass.bindTexture(
                 "DiffuseSampler",
-                tempTarget.getColorTextureView()!!,
+                input.getColorTextureView()!!,
                 RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
             )*/
             //?}
             //? if <1.21.11 {
-            renderPass.bindSampler("DiffuseSampler", tempTarget.getColorTextureView()!!)
+            renderPass.bindSampler("DiffuseSampler", input.getColorTextureView()!!)
             //?}
-            renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
+            if (hasUniforms) {
+                renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
+            }
             //? if >=26.2 {
             /*renderPass.draw(FullscreenTriangle.VERTEX_COUNT, 1, 0, 0)*/
             //?}
