@@ -6,10 +6,18 @@ import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.blaze3d.systems.RenderSystem
 
 object SaturationUniforms {
-    private val blockSize = Std140SizeCalculator().putFloat().get()
+    private val blockSize = Std140SizeCalculator()
+        .putFloat()
+        .putFloat()
+        .putFloat()
+        .putFloat()
+        .get()
     private val device get() = RenderSystem.getDevice()
 
-    private var uploaded = Float.NaN
+    private var uploadedSaturation = Float.NaN
+    private var uploadedContrast = Float.NaN
+    private var uploadedBrightness = Float.NaN
+    private var uploadedHue = Float.NaN
 
     val buffer: GpuBuffer by lazy {
         device.createBuffer(
@@ -22,22 +30,37 @@ object SaturationUniforms {
         )
     }
 
-    fun upload(strength: Float) {
-        if (strength == uploaded) {
+    fun upload(strength: Float, contrast: Float, brightness: Float, hue: Float) {
+        if (strength == uploadedSaturation &&
+            contrast == uploadedContrast &&
+            brightness == uploadedBrightness &&
+            hue == uploadedHue
+        ) {
             return
         }
 
         //? if >=26.2 {
         /*buffer.map(false, true).use { mapped ->
-            mapped.data().putFloat(strength)
+            mapped.data()
+                .putFloat(strength)
+                .putFloat(contrast)
+                .putFloat(brightness)
+                .putFloat(hue)
         }
         *///?} else {
         device.createCommandEncoder().mapBuffer(buffer, false, true).use { mapped ->
-            mapped.data().putFloat(strength)
+            mapped.data()
+                .putFloat(strength)
+                .putFloat(contrast)
+                .putFloat(brightness)
+                .putFloat(hue)
         }
         //?}
 
-        uploaded = strength
+        uploadedSaturation = strength
+        uploadedContrast = contrast
+        uploadedBrightness = brightness
+        uploadedHue = hue
     }
 }
 //?}

@@ -20,13 +20,30 @@ object ColorSaturationConfig : Config(
     @Slider(title = "Saturation Strength", min = -1f, max = 5f, step = 0.05f)
     var strength = 1f
 
+    @JvmField
+    @Slider(title = "Contrast", min = 0f, max = 2f, step = 0.05f)
+    var contrast = 1f
+
+    @JvmField
+    @Slider(title = "Brightness", min = 0f, max = 2f, step = 0.05f)
+    var brightness = 1f
+
+    @JvmField
+    @Slider(title = "Hue Shift", min = -180f, max = 180f, step = 1f)
+    var hue = 0f
+
     @JvmStatic
-    val isIdentityStrength: Boolean
-        get() = abs(strength - 1f) < 1e-4f
+    val isIdentity: Boolean
+        get() = abs(strength - 1f) < 1e-4f &&
+            abs(contrast - 1f) < 1e-4f &&
+            abs(brightness - 1f) < 1e-4f &&
+            abs(hue) < 1e-4f
 
     init {
-        addCallback("strength") {
-            SaturationHandler.updateShaderUniforms()
+        for (key in arrayOf("strength", "contrast", "brightness", "hue")) {
+            addCallback(key) {
+                SaturationHandler.updateShaderUniforms()
+            }
         }
         save()
     }

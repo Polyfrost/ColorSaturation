@@ -19,6 +19,21 @@
                         "name": "Saturation",
                         "type": "float",
                         "value": 1.0
+                    },
+                    {
+                        "name": "Contrast",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Brightness",
+                        "type": "float",
+                        "value": 1.0
+                    },
+                    {
+                        "name": "Hue",
+                        "type": "float",
+                        "value": 0.0
                     }
                 ]
             }
