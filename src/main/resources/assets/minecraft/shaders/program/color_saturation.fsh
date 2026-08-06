@@ -15,7 +15,7 @@ vec3 rotateHue(vec3 color, float degrees) {
     float angle = radians(degrees);
     float cosAngle = cos(angle);
     float sinAngle = sin(angle);
-    const vec3 axis = vec3(0.57735026);
+    const vec3 axis = vec3(1.0 / sqrt(3.0));
     return color * cosAngle + cross(axis, color) * sinAngle + axis * dot(axis, color) * (1.0 - cosAngle);
 }
 
