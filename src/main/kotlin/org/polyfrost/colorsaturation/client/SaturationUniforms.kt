@@ -24,9 +24,9 @@ object SaturationUniforms {
             { "ColorSaturation_UBO" },
             GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
             //? if >=1.21.11
-            /*blockSize.toLong()*/
+            blockSize.toLong()
             //? if <1.21.11
-            blockSize
+            //blockSize
         )
     }
 
@@ -40,22 +40,22 @@ object SaturationUniforms {
         }
 
         //? if >=26.2 {
-        /*buffer.map(false, true).use { mapped ->
+        buffer.map(false, true).use { mapped ->
             mapped.data()
                 .putFloat(strength)
                 .putFloat(contrast)
                 .putFloat(brightness)
                 .putFloat(hue)
         }
-        *///?} else {
-        device.createCommandEncoder().mapBuffer(buffer, false, true).use { mapped ->
+        //?} else {
+        /*device.createCommandEncoder().mapBuffer(buffer, false, true).use { mapped ->
             mapped.data()
                 .putFloat(strength)
                 .putFloat(contrast)
                 .putFloat(brightness)
                 .putFloat(hue)
         }
-        //?}
+        *///?}
 
         uploadedSaturation = strength
         uploadedContrast = contrast

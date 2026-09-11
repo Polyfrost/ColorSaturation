@@ -4,9 +4,9 @@ package org.polyfrost.colorsaturation.client
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.resource.RenderTargetDescriptor
 //? if >=26.2
-/*import com.mojang.blaze3d.GpuFormat*/
+import com.mojang.blaze3d.GpuFormat
 //? if >=26.2
-/*import org.joml.Vector4f*/
+import org.joml.Vector4f
 
 object InternalTargetTracker {
     private var framebufferFactory: RenderTargetDescriptor? = null
@@ -16,30 +16,30 @@ object InternalTargetTracker {
     private var prevWidth = -1
     private var prevHeight = -1
     //? if >=26.2
-    /*private var prevFormat: GpuFormat? = null*/
+    private var prevFormat: GpuFormat? = null
 
     fun updateSize(renderTarget: RenderTarget) {
         val width = renderTarget.width
         val height = renderTarget.height
 
         //? if >=26.2 {
-        /*val format = renderTarget.getColorTexture()!!.getFormat()
+        val format = renderTarget.getColorTexture()!!.getFormat()
         if (width == prevWidth && height == prevHeight && format == prevFormat && target != null) {
             return
         }
 
         framebufferFactory = createTargetDescriptor(width, height, format)
         prevFormat = format
-        *///?}
+        //?}
         //? if <26.2 {
-        if (width == prevWidth && height == prevHeight && target != null) {
+        /*if (width == prevWidth && height == prevHeight && target != null) {
             return
         }
 
         if (framebufferFactory?.width != width || framebufferFactory?.height != height) {
             framebufferFactory = createTargetDescriptor(width, height)
         }
-        //?}
+        *///?}
 
         free()
         target = framebufferFactory?.allocate()
@@ -57,11 +57,11 @@ object InternalTargetTracker {
 }
 
 //? if >=26.2 {
-/*fun createTargetDescriptor(width: Int, height: Int, format: GpuFormat): RenderTargetDescriptor =
+fun createTargetDescriptor(width: Int, height: Int, format: GpuFormat): RenderTargetDescriptor =
     RenderTargetDescriptor(width, height, false, Vector4f(0f, 0f, 0f, 0f), format)
-*///?}
-//? if <26.2 {
-fun createTargetDescriptor(width: Int, height: Int): RenderTargetDescriptor =
-    RenderTargetDescriptor(width, height, false, 0)
 //?}
+//? if <26.2 {
+/*fun createTargetDescriptor(width: Int, height: Int): RenderTargetDescriptor =
+    RenderTargetDescriptor(width, height, false, 0)
+*///?}
 //?}

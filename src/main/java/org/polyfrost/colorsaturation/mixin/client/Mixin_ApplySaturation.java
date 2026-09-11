@@ -17,7 +17,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import org.spongepowered.asm.mixin.Final;
 //?}
 //? if >=26.2
-/*import com.mojang.blaze3d.pipeline.RenderTarget;*/
+import com.mojang.blaze3d.pipeline.RenderTarget;
 
 @Mixin(GameRenderer.class)
 public class Mixin_ApplySaturation {
@@ -25,7 +25,7 @@ public class Mixin_ApplySaturation {
     //? if >=1.21.2
     @Shadow @Final private CrossFrameResourcePool resourcePool;
     //? if >=26.2
-    /*@Shadow @Final private RenderTarget mainRenderTarget;*/
+    @Shadow @Final private RenderTarget mainRenderTarget;
 
     @Inject(
             method = "render",
@@ -42,12 +42,12 @@ public class Mixin_ApplySaturation {
 
         //? if >=1.21.2 {
         //? if <1.21.11
-        RenderSystem.resetTextureMatrix();
+        //RenderSystem.resetTextureMatrix();
         //? if >=26.2 {
-        /*SaturationHandler.render(this.mainRenderTarget, this.resourcePool);
-        *///?} else {
-        SaturationHandler.render(this.minecraft.getMainRenderTarget(), this.resourcePool);
-        //?}
+        SaturationHandler.render(this.mainRenderTarget, this.resourcePool);
+        //?} else {
+        /*SaturationHandler.render(this.minecraft.getMainRenderTarget(), this.resourcePool);
+        *///?}
         //?} else {
         /*SaturationHandler.update();
         SaturationHandler.render(deltaTracker.getGameTimeDeltaPartialTick(false));

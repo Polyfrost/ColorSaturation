@@ -168,29 +168,29 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
 import com.mojang.blaze3d.pipeline.RenderPipeline
 import com.mojang.blaze3d.pipeline.RenderTarget
 //? if >=26.2
-/*import com.mojang.blaze3d.PrimitiveTopology*/
+import com.mojang.blaze3d.PrimitiveTopology
 //? if >=26.1
-/*import com.mojang.blaze3d.pipeline.ColorTargetState*/
+import com.mojang.blaze3d.pipeline.ColorTargetState
 //? if >=26.2
-/*import com.mojang.blaze3d.pipeline.BindGroupLayout*/
+import com.mojang.blaze3d.pipeline.BindGroupLayout
 //? if >=26.1
-/*import com.mojang.blaze3d.pipeline.DepthStencilState*/
+import com.mojang.blaze3d.pipeline.DepthStencilState
 //? if >=26.1
-/*import com.mojang.blaze3d.platform.CompareOp*/
+import com.mojang.blaze3d.platform.CompareOp
 //? if <26.1
-import com.mojang.blaze3d.platform.DepthTestFunction
+//import com.mojang.blaze3d.platform.DepthTestFunction
 import com.mojang.blaze3d.resource.CrossFrameResourcePool
 import com.mojang.blaze3d.shaders.UniformType
 import com.mojang.blaze3d.systems.RenderSystem
 //? if >=1.21.11
-/*import com.mojang.blaze3d.textures.FilterMode*/
+import com.mojang.blaze3d.textures.FilterMode
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.VertexFormat
 import org.polyfrost.colorsaturation.ColorSaturationConstants
 //? if >=26.1
-/*import java.util.Optional*/
+import java.util.Optional
 //? if <26.2
-import java.util.OptionalInt
+//import java.util.OptionalInt
 
 object SaturationHandler {
     private val saturationPipeline by lazy {
@@ -208,7 +208,7 @@ object SaturationHandler {
             .withFragmentShader(location(ColorSaturationConstants.ID, fragmentShader))
 
         //? if >=26.2 {
-        /*builder.withVertexBinding(0, DefaultVertexFormat.POSITION)
+        builder.withVertexBinding(0, DefaultVertexFormat.POSITION)
             .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
             .withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
@@ -218,25 +218,25 @@ object SaturationHandler {
             bindGroupLayout.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
         }
         builder.withBindGroupLayout(bindGroupLayout.build())
-        *///?}
-        //? if <26.2 {
-        builder.withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.TRIANGLES)
         //?}
+        //? if <26.2 {
+        /*builder.withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.TRIANGLES)
+        *///?}
         //? if >=26.1 && <26.2 {
         /*builder.withDepthStencilState(Optional.empty())
             .withColorTargetState(ColorTargetState.DEFAULT)
         *///?}
         //? if <26.1 {
-        builder.withDepthWrite(false)
+        /*builder.withDepthWrite(false)
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .withColorWrite(true, true)
-        //?}
+        *///?}
         //? if <26.2 {
-        if (hasUniforms) {
+        /*if (hasUniforms) {
             builder.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
         }
         builder.withSampler("DiffuseSampler")
-        //?}
+        *///?}
 
         return builder.build()
     }
@@ -288,38 +288,38 @@ object SaturationHandler {
             { label },
             output.getColorTextureView()!!,
             //? if >=26.2 {
-            /*Optional.empty()*/
+            Optional.empty()
             //?}
             //? if <26.2 {
-            OptionalInt.empty()
-            //?}
+            /*OptionalInt.empty()
+            *///?}
         ).use { renderPass ->
             renderPass.setPipeline(pipeline)
             //? if >=26.2 {
-            /*renderPass.setVertexBuffer(0, vertexBuffer.slice())*/
+            renderPass.setVertexBuffer(0, vertexBuffer.slice())
             //?}
             //? if <26.2 {
-            renderPass.setVertexBuffer(0, vertexBuffer)
-            //?}
+            /*renderPass.setVertexBuffer(0, vertexBuffer)
+            *///?}
             //? if >=1.21.11 {
-            /*renderPass.bindTexture(
+            renderPass.bindTexture(
                 "DiffuseSampler",
                 input.getColorTextureView()!!,
                 RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
-            )*/
+            )
             //?}
             //? if <1.21.11 {
-            renderPass.bindSampler("DiffuseSampler", input.getColorTextureView()!!)
-            //?}
+            /*renderPass.bindSampler("DiffuseSampler", input.getColorTextureView()!!)
+            *///?}
             if (hasUniforms) {
                 renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
             }
             //? if >=26.2 {
-            /*renderPass.draw(FullscreenTriangle.VERTEX_COUNT, 1, 0, 0)*/
+            renderPass.draw(FullscreenTriangle.VERTEX_COUNT, 1, 0, 0)
             //?}
             //? if <26.2 {
-            renderPass.draw(0, FullscreenTriangle.VERTEX_COUNT)
-            //?}
+            /*renderPass.draw(0, FullscreenTriangle.VERTEX_COUNT)
+            *///?}
         }
     }
 }

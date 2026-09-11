@@ -4,7 +4,7 @@ package org.polyfrost.colorsaturation.client
 import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.systems.RenderSystem
 //? if >=26.2
-/*import com.mojang.blaze3d.PrimitiveTopology*/
+import com.mojang.blaze3d.PrimitiveTopology
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.ByteBufferBuilder
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -18,9 +18,9 @@ object FullscreenTriangle {
         val builder = BufferBuilder(
             storage,
             //? if >=26.2
-            /*PrimitiveTopology.TRIANGLES,*/
+            PrimitiveTopology.TRIANGLES,
             //? if <26.2
-            VertexFormat.Mode.TRIANGLES,
+            //VertexFormat.Mode.TRIANGLES,
             DefaultVertexFormat.POSITION
         )
 
