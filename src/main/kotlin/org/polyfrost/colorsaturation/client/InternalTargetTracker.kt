@@ -3,10 +3,10 @@ package org.polyfrost.colorsaturation.client
 //? if >1.21.5 {
 import com.mojang.blaze3d.pipeline.RenderTarget
 import com.mojang.blaze3d.resource.RenderTargetDescriptor
-//? if >=26.2
-import com.mojang.blaze3d.GpuFormat
-//? if >=26.2
+//? if >=26.2 {
+import com.mojang.renderpearl.api.GpuFormat
 import org.joml.Vector4f
+//?}
 
 object InternalTargetTracker {
     private var framebufferFactory: RenderTargetDescriptor? = null
@@ -30,8 +30,7 @@ object InternalTargetTracker {
 
         framebufferFactory = createTargetDescriptor(width, height, format)
         prevFormat = format
-        //?}
-        //? if <26.2 {
+        //?} else {
         /*if (width == prevWidth && height == prevHeight && target != null) {
             return
         }
@@ -56,11 +55,18 @@ object InternalTargetTracker {
     }
 }
 
-//? if >=26.2 {
+//? if >=26.3 {
 fun createTargetDescriptor(width: Int, height: Int, format: GpuFormat): RenderTargetDescriptor =
+    RenderTargetDescriptor(
+        width,
+        height,
+        RenderTargetDescriptor.TextureProperties(Vector4f(0f, 0f, 0f, 0f), format),
+        null,
+    )
+//?} elif =26.2 {
+/*fun createTargetDescriptor(width: Int, height: Int, format: GpuFormat): RenderTargetDescriptor =
     RenderTargetDescriptor(width, height, false, Vector4f(0f, 0f, 0f, 0f), format)
-//?}
-//? if <26.2 {
+*///?} else {
 /*fun createTargetDescriptor(width: Int, height: Int): RenderTargetDescriptor =
     RenderTargetDescriptor(width, height, false, 0)
 *///?}

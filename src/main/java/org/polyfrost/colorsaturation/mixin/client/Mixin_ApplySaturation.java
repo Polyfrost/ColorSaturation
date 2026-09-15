@@ -31,10 +31,18 @@ public class Mixin_ApplySaturation {
             method = "render",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V"
+                    //? if >=26.3 {
+                    target = "Lnet/minecraft/client/renderer/LevelRenderer;blitEntityOutline()V"
+                    //?} else {
+                    /*target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V"
+                    *///?}
             )
     )
-    private void colorsaturation$applySaturation(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
+    //? if >=26.3 {
+    private void colorsaturation$applySaturation(CallbackInfo ci) {
+    //?} else {
+    /*private void colorsaturation$applySaturation(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
+    *///?}
         if (!ColorSaturationConfig.isEnabled || !this.minecraft.isGameLoadFinished() || this.minecraft.level == null) {
             SaturationHandler.free();
             return;

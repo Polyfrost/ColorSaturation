@@ -1,9 +1,9 @@
 package org.polyfrost.colorsaturation.client
 
 //? if >1.21.5 {
-import com.mojang.blaze3d.buffers.GpuBuffer
 import com.mojang.blaze3d.buffers.Std140SizeCalculator
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.renderpearl.api.buffers.GpuBuffer
 
 object SaturationUniforms {
     private val blockSize = Std140SizeCalculator()
@@ -23,9 +23,9 @@ object SaturationUniforms {
         device.createBuffer(
             { "ColorSaturation_UBO" },
             GpuBuffer.USAGE_UNIFORM or GpuBuffer.USAGE_MAP_WRITE,
-            //? if >=1.21.11
+            //? if >=1.21.11 {
             blockSize.toLong()
-            //? if <1.21.11
+            //?} else
             //blockSize
         )
     }
