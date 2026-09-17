@@ -9,7 +9,8 @@
         "maxShiftBy": 5
     },
     "client": [
-        "client.Mixin_ApplySaturation"
+        "client.Mixin_ApplySaturation",
+        "client.PostChainAccessor"
     ],
     "verbose": true
 }
