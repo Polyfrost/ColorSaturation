@@ -418,7 +418,7 @@ publishMods {
 
     modLoaders.add(loader)
 
-    dryRun = modrinthId == null || modrinthToken == null
+    dryRun = modrinthId == null || modrinthToken == null || !isOrnithe
 
     if (modrinthId != null) {
         modrinth {
