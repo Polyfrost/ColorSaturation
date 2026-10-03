@@ -80,6 +80,7 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:$mcDependencyVersion")
     if (isOrnithe) {
+        // ploceus is only null when !isOrnithe
         mappings(ploceus!!.layeredMappings {
             mappings("net.ornithemc:feather-gen2:$mcversion+build.${sc.properties["feather_build"] as String}:v2") {
                 containsUnpick()
