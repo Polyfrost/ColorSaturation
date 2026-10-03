@@ -1,5 +1,6 @@
 package org.polyfrost.colorsaturation.mixin.client;
 
+//? if >1.8.9
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -27,6 +28,7 @@ public class Mixin_ApplySaturation {
     //? if >=26.2
     @Shadow @Final private RenderTarget mainRenderTarget;
 
+    //? if >1.8.9 {
     @Inject(
             method = "render",
             at = @At(
@@ -38,12 +40,27 @@ public class Mixin_ApplySaturation {
                     *///?}
             )
     )
+    //?} else {
+    /*@Inject(
+            method = "render(FJ)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/world/WorldRenderer;renderEntityOutlines()V",
+                    shift = At.Shift.AFTER
+            )
+    )
+    *///?}
     //? if >=26.3 {
     private void colorsaturation$applySaturation(CallbackInfo ci) {
-    //?} else {
+    //?} elif >1.8.9 {
     /*private void colorsaturation$applySaturation(DeltaTracker deltaTracker, boolean renderLevel, CallbackInfo ci) {
+    *///?} else {
+    /*private void colorsaturation$applySaturation(float tickDelta, long startTime, CallbackInfo ci) {
     *///?}
+        //? if >1.8.9 {
         if (!ColorSaturationConfig.isEnabled || !this.minecraft.isGameLoadFinished() || this.minecraft.level == null) {
+        //?} else
+        //if (!ColorSaturationConfig.isEnabled) {
             SaturationHandler.free();
             return;
         }
@@ -56,9 +73,12 @@ public class Mixin_ApplySaturation {
         //?} else {
         /*SaturationHandler.render(this.minecraft.getMainRenderTarget(), this.resourcePool);
         *///?}
-        //?} else {
+        //?} elif >1.8.9 {
         /*SaturationHandler.update();
         SaturationHandler.render(deltaTracker.getGameTimeDeltaPartialTick(false));
+        *///?} else {
+        /*SaturationHandler.update();
+        SaturationHandler.render(tickDelta);
         *///?}
     }
 }

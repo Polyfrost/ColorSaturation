@@ -1,12 +1,14 @@
 package org.polyfrost.colorsaturation.client
 
-//? if =1.21.1 {
+//? if =1.21.1 || =1.8.9 {
 /*import com.google.gson.JsonSyntaxException
 import com.mojang.blaze3d.pipeline.RenderTarget
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.PostChain
 import org.apache.logging.log4j.LogManager
 import java.io.IOException
+//? if =1.8.9
+//import org.polyfrost.colorsaturation.mixin.client.PostChainAccessor
 
 object SaturationHandler {
     private val logger = LogManager.getLogger(SaturationHandler::class.java)
@@ -28,6 +30,14 @@ object SaturationHandler {
         chain.setUniform("Brightness", ColorSaturationConfig.brightness)
         chain.setUniform("Hue", ColorSaturationConfig.hue)
     }
+
+    //? if =1.8.9 {
+    /*private fun PostChain.setUniform(name: String, value: Float) {
+        for (pass in (this as PostChainAccessor).passes) {
+            pass.effect.getUniform(name)?.set(value)
+        }
+    }
+    *///?}
 
     @JvmStatic
     fun free() {
