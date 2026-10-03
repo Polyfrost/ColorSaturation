@@ -346,19 +346,18 @@ tasks {
 
         exclude("assets/colorsaturation/post_effect/color_saturation.json")
 
-        if (mcversion != "1.21.1" && !isOrnithe) {
-            exclude(
-                "assets/minecraft/shaders/post/color_saturation.json",
-                "assets/minecraft/shaders/program/color_saturation.json",
-                "assets/minecraft/shaders/program/color_saturation.fsh"
-            )
-        }
-
         if (isOrnithe) {
-            exclude("assets/minecraft/shaders/program/color_saturation.fsh")
+            exclude("assets/colorsaturation/shaders/**", "assets/minecraft/shaders/program/color_saturation.fsh")
             filesMatching("assets/minecraft/shaders/program/color_saturation_glsl120.fsh") { name = "color_saturation.fsh" }
         } else {
             exclude("assets/minecraft/shaders/program/color_saturation_glsl120.fsh")
+            if (mcversion != "1.21.1") {
+                exclude(
+                    "assets/minecraft/shaders/post/color_saturation.json",
+                    "assets/minecraft/shaders/program/color_saturation.json",
+                    "assets/minecraft/shaders/program/color_saturation.fsh"
+                )
+            }
         }
 
         if (mcversion != "1.21.4") {
@@ -366,6 +365,8 @@ tasks {
         }
 
         doLast {
+            if (isOrnithe) return@doLast
+
             val output = destinationDir.resolve("assets/colorsaturation/post_effect/color_saturation.json")
             output.parentFile.mkdirs()
             output.writeText("$postEffectJson\n")
