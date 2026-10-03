@@ -327,6 +327,9 @@ tasks {
         }
     }
 
+    // The empty log4j2.xml is a workaround only needed for 1.8.9 tests; elsewhere it would mute test logging
+    if (!isOrnithe) processTestResources { exclude("log4j2.xml") }
+
     processResources {
         val props = mapOf(
             "mod_id" to modid,
