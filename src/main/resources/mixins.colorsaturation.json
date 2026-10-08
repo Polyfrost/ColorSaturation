@@ -11,6 +11,5 @@
     "client": [
         "client.Mixin_ApplySaturation",
         "client.PostChainAccessor"
-    ],
-    "verbose": true
+    ]
 }
