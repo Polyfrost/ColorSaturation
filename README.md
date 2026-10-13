@@ -5,7 +5,11 @@
 
 ColorSaturation is a shader that recolors your world. Crank the saturation up for punchier colors, or pull it all the way down to play in grayscale. There are sliders for contrast, brightness and hue too.
 
-![Before and after](images/before-and-after.png)
+![Turning saturation up](.github/images/saturate.gif)
+
+![Going grayscale](.github/images/grayscale.gif)
+
+![Hue shift](.github/images/hue.gif)
 
 ## Supported versions
 
