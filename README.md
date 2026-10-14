@@ -1,17 +1,24 @@
-<img align="right" src="src/main/resources/colorsaturation.svg" alt="ColorSaturation Icon"/>
-
 # ColorSaturation
 
-![Compact Powered by OneConfig](https://polyfrost.org/img/compact_vector.svg)  ![Dev Workflow Status](https://img.shields.io/github/v/release/Polyfrost/ColorSaturation.svg?style=for-the-badge&color=1452cc&label=release)
+[![Modrinth downloads](https://img.shields.io/modrinth/dt/fLNnSWgM?style=flat&logo=modrinth&label=Modrinth&color=1bd96a)](https://modrinth.com/mod/colorsaturation)
+[![CurseForge downloads](https://img.shields.io/curseforge/dt/1148008?style=flat&logo=curseforge&label=CurseForge&color=f16436)](https://www.curseforge.com/minecraft/mc-mods/colorsaturation)
 
-A simple color saturation mod.
+ColorSaturation is a shader that recolors your world. Crank the saturation up for punchier colors, or pull it all the way down to play in grayscale. There are sliders for contrast, brightness and hue too.
 
-## Features
+![Turning saturation up](.github/images/saturate.gif)
 
-- Toggle on / off
-- Change saturation intensity
+![Going grayscale](.github/images/grayscale.gif)
 
-## Gallery
+![Hue shift](.github/images/hue.gif)
 
-![settings-page.png](images/settings-page.png)
-![before-and-after.png](images/before-and-after.png)
+## Supported versions
+
+- Minecraft 1.8.9 on Ornithe.
+- Minecraft 1.21.1-26.3 on Fabric.
+
+ColorSaturation needs [OneConfig](https://modrinth.com/mod/oneconfig) and Fabric Language Kotlin.
+
+## Support
+
+- Report bugs and ask questions on the [Polyfrost Discord](https://polyfrost.org/discord).
+- Check [Polyfrost Status](https://status.polyfrost.org/) if a Polyfrost service is down.
