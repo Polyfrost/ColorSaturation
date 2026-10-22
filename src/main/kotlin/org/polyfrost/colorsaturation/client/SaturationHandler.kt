@@ -201,19 +201,13 @@ import com.mojang.renderpearl.api.vertex.VertexFormat
 import org.polyfrost.colorsaturation.ColorSaturationConstants
 
 object SaturationHandler {
-    private val saturationPipeline by lazy {
-        createPipeline("saturation_pipeline", "post/color_saturation", true)
-    }
+    private val saturationPipeline by lazy { createPipeline() }
 
-    private val blitPipeline by lazy {
-        createPipeline("blit_pipeline", "post/blit", false)
-    }
-
-    private fun createPipeline(name: String, fragmentShader: String, hasUniforms: Boolean): RenderPipeline {
+    private fun createPipeline(): RenderPipeline {
         val builder = RenderPipeline.builder()
-            .withLocation(location(ColorSaturationConstants.ID, name))
+            .withLocation(location(ColorSaturationConstants.ID, "saturation_pipeline"))
             .withVertexShader(location(ColorSaturationConstants.ID, "core/fullscreen_triangle"))
-            .withFragmentShader(location(ColorSaturationConstants.ID, fragmentShader))
+            .withFragmentShader(location(ColorSaturationConstants.ID, "post/color_saturation"))
 
         //? if >=26.2 {
         builder.withVertexBinding(0, DefaultVertexFormat.POSITION)
@@ -227,9 +221,7 @@ object SaturationHandler {
         //?} else {
         /*val bindGroupLayout = BindGroupLayout.builder().withSampler("DiffuseSampler")
         *///?}
-        if (hasUniforms) {
-            bindGroupLayout.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
-        }
+        bindGroupLayout.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
         builder.withBindGroupLayout(bindGroupLayout.build())
         //?}
         //? if <26.2 {
@@ -245,9 +237,7 @@ object SaturationHandler {
             .withColorWrite(true, true)
         *///?}
         //? if <26.2 {
-        /*if (hasUniforms) {
-            builder.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
-        }
+        /*builder.withUniform("SaturationConfig", UniformType.UNIFORM_BUFFER)
         builder.withSampler("DiffuseSampler")
         *///?}
 
@@ -283,22 +273,22 @@ object SaturationHandler {
         )
 
         val tempTarget = InternalTargetTracker.target ?: return
-        drawPass("ColorSaturation/Saturation", tempTarget, renderTarget, saturationPipeline, true)
-        drawPass("ColorSaturation/Blit", renderTarget, tempTarget, blitPipeline, false)
+        RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
+            renderTarget.getColorTexture()!!,
+            tempTarget.getColorTexture()!!,
+            0, 0, 0, 0, 0,
+            renderTarget.width,
+            renderTarget.height,
+        )
+        drawPass(renderTarget, tempTarget)
     }
 
-    private fun drawPass(
-        label: String,
-        output: RenderTarget,
-        input: RenderTarget,
-        pipeline: RenderPipeline,
-        hasUniforms: Boolean,
-    ) {
+    private fun drawPass(output: RenderTarget, input: RenderTarget) {
         val commandEncoder = RenderSystem.getDevice().createCommandEncoder()
         val vertexBuffer = FullscreenTriangle.vertexBuffer
 
         commandEncoder.createRenderPass(
-            { label },
+            { "ColorSaturation/Saturation" },
             output.getColorTextureView()!!,
             //? if >=26.2 {
             Optional.empty()
@@ -307,9 +297,9 @@ object SaturationHandler {
             *///?}
         ).use { renderPass ->
             //? if >=26.3 {
-            renderPass.setPipeline(RenderSystem.getCompiledPipeline(pipeline))
+            renderPass.setPipeline(RenderSystem.getCompiledPipeline(saturationPipeline))
             //?} else {
-            /*renderPass.setPipeline(pipeline)
+            /*renderPass.setPipeline(saturationPipeline)
             *///?}
             //? if >=26.2 {
             renderPass.setVertexBuffer(0, vertexBuffer.slice())
@@ -331,9 +321,7 @@ object SaturationHandler {
             *///?} else {
             /*renderPass.bindSampler("DiffuseSampler", input.getColorTextureView()!!)
             *///?}
-            if (hasUniforms) {
-                renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
-            }
+            renderPass.setUniform("SaturationConfig", SaturationUniforms.buffer)
             //? if >=26.2 {
             renderPass.draw(FullscreenTriangle.VERTEX_COUNT, 1, 0, 0)
             //?} else {
