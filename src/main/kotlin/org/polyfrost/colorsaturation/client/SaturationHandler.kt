@@ -104,8 +104,10 @@ import org.apache.logging.log4j.LogManager
 import org.polyfrost.colorsaturation.ColorSaturationConstants
 *///?}
 
-//? if =1.21.5
-/*import java.util.function.Consumer*/
+//? if =1.21.5 {
+/*import com.mojang.blaze3d.systems.RenderPass
+import java.util.function.Consumer
+*///?}
 
 //? if >=1.21.4 && <1.21.8 {
 /*object SaturationHandler {
@@ -149,7 +151,7 @@ import org.polyfrost.colorsaturation.ColorSaturationConstants
             renderTarget.viewWidth,
             renderTarget.viewHeight,
             targetBundle,
-            Consumer { renderPass: com.mojang.blaze3d.systems.RenderPass ->
+            Consumer { renderPass: RenderPass ->
                 renderPass.setUniform("Saturation", ColorSaturationConfig.strength)
                 renderPass.setUniform("Contrast", ColorSaturationConfig.contrast)
                 renderPass.setUniform("Brightness", ColorSaturationConfig.brightness)
