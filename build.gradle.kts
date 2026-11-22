@@ -170,13 +170,7 @@ val postEffectJson: String = when (mcversion) {
                 {
                     "program": "colorsaturation:post/color_saturation_legacy",
                     "inputs": [
-                        { "sampler_name": "DiffuseSampler", "target": "minecraft:main" }
-                    ],
-                    "uniforms": [
-                        { "name": "Saturation", "values": [ 1.0 ] },
-                        { "name": "Contrast", "values": [ 1.0 ] },
-                        { "name": "Brightness", "values": [ 1.0 ] },
-                        { "name": "Hue", "values": [ 0.0 ] }
+                        { "sampler_name": "Diffuse", "target": "minecraft:main" }
                     ],
                     "output": "swap"
                 },
@@ -201,13 +195,13 @@ val postEffectJson: String = when (mcversion) {
                     "vertex_shader": "minecraft:post/blit",
                     "fragment_shader": "colorsaturation:post/color_saturation_legacy",
                     "inputs": [
-                        { "sampler_name": "DiffuseSampler", "target": "minecraft:main" }
+                        { "sampler_name": "Diffuse", "target": "minecraft:main" }
                     ],
                     "uniforms": [
-                        { "name": "Saturation", "type": "float", "values": [ 1.0 ] },
-                        { "name": "Contrast", "type": "float", "values": [ 1.0 ] },
-                        { "name": "Brightness", "type": "float", "values": [ 1.0 ] },
-                        { "name": "Hue", "type": "float", "values": [ 0.0 ] }
+                        { "name": "Saturation", "type": "float" },
+                        { "name": "Contrast", "type": "float" },
+                        { "name": "Brightness", "type": "float" },
+                        { "name": "Hue", "type": "float" }
                     ],
                     "output": "swap"
                 },

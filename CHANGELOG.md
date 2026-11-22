@@ -1,4 +1,2 @@
-## 1.3.3
-- Fixed mod name being displayed as `@MOD_NAME@`
-- Fixed config being reset
-- Fixed shaders not working
+## Unreleased changes
+- Fixed broken rendering on 1.21.4 and 1.21.5 when using non-default settings
