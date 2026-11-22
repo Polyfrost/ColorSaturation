@@ -50,6 +50,7 @@ object SaturationHandler {
     @JvmStatic
     fun update() {
         val minecraft = Minecraft.getInstance()
+        //~ if =1.8.9 '.mainRenderTarget' -> '.renderTarget'
         val renderTarget = minecraft.mainRenderTarget ?: return
         getPostChain(renderTarget)
     }
