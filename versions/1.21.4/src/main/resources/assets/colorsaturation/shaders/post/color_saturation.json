@@ -5,7 +5,7 @@
         "dstrgb": "zero"
     },
     "vertex": "minecraft:post/sobel",
-    "fragment": "colorsaturation:post/color_saturation_legacy",
+    "fragment": "colorsaturation:post/color_saturation",
     "attributes": [ "Position" ],
     "samplers": [
         { "name": "DiffuseSampler" }

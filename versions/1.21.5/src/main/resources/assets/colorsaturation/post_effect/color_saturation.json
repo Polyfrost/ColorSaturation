@@ -1,0 +1,32 @@
+{
+    "targets": {
+        "swap": {}
+    },
+    "passes": [
+        {
+            "vertex_shader": "minecraft:post/blit",
+            "fragment_shader": "colorsaturation:post/color_saturation",
+            "inputs": [
+                { "sampler_name": "Diffuse", "target": "minecraft:main" }
+            ],
+            "uniforms": [
+                { "name": "Saturation", "type": "float" },
+                { "name": "Contrast", "type": "float" },
+                { "name": "Brightness", "type": "float" },
+                { "name": "Hue", "type": "float" }
+            ],
+            "output": "swap"
+        },
+        {
+            "vertex_shader": "minecraft:post/blit",
+            "fragment_shader": "minecraft:post/blit",
+            "inputs": [
+                { "sampler_name": "In", "target": "swap" }
+            ],
+            "uniforms": [
+                { "name": "ColorModulate", "type": "vec4", "values": [ 1.0, 1.0, 1.0, 1.0 ] }
+            ],
+            "output": "minecraft:main"
+        }
+    ]
+}
