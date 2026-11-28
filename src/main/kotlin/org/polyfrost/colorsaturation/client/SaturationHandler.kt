@@ -276,14 +276,14 @@ object SaturationHandler {
         )
 
         val tempTarget = InternalTargetTracker.target ?: return
+        drawPass(tempTarget, renderTarget)
         RenderSystem.getDevice().createCommandEncoder().copyTextureToTexture(
-            renderTarget.getColorTexture()!!,
             tempTarget.getColorTexture()!!,
+            renderTarget.getColorTexture()!!,
             0, 0, 0, 0, 0,
             renderTarget.width,
             renderTarget.height,
         )
-        drawPass(renderTarget, tempTarget)
     }
 
     private fun drawPass(output: RenderTarget, input: RenderTarget) {
